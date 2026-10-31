@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nick Parbs</title>
+  <meta name="description" content="Games, desktop tools and open source projects by Nick Parbs.">
+  <link rel="canonical" href="https://parbs.online/">
+  <meta property="og:title" content="Nick Parbs">
+  <meta property="og:description" content="Games, desktop tools and open source projects.">
+  <meta property="og:url" content="https://parbs.online/">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://parbs.online/assets/scrap-riot-trailer-poster.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#14130f">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="top">
+    <a class="wordmark" href="#main">parbs<span>.online</span></a>
+    <nav aria-label="Sections">
+      <a href="#games">Games</a>
+      <a href="#projects">Projects</a>
+      <a href="#content">Content</a>
+      <a href="#github">GitHub</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <h1>Nick<br>Parbs</h1>
+      <p>I build games and desktop tools. Everything here is free to play, download or read the code of.</p>
+    </section>
+
+    <section id="games" class="section">
+      <h2 class="label"><span>01</span> Games</h2>
+
+      <article class="feature">
+        <a class="feature-media" href="https://nparbs.github.io/scrap-riot/" aria-label="Play Scrap Riot">
+          <img src="assets/scrap-riot-garage.jpg" width="1280" height="720" loading="lazy" alt="The Scrap Riot garage: an orange tank with a chainsaw on a turntable beside a shop of chassis and weapons.">
+        </a>
+        <div class="feature-body">
+          <h3>Scrap Riot</h3>
+          <p>A 3D robot duelling game that runs in the browser. Build a robot in the workshop, meet another pilot on a skyscraper roof, and wreck them or knock them over the edge.</p>
+          <ul class="facts">
+            <li>37 weapons</li>
+            <li>7 maps</li>
+            <li>4 modes</li>
+            <li>Online duels</li>
+          </ul>
+          <div class="actions">
+            <a class="button primary" href="https://nparbs.github.io/scrap-riot/">Play in browser</a>
+            <a class="button" href="https://github.com/nparbs/scrap-riot">Source</a>
+          </div>
+          <p class="note">Needs a keyboard and WebGL. A fan-made homage to <em>Robot Rage</em>, not affiliated with or endorsed by Miniclip.</p>
+        </div>
+      </article>
+    </section>
+
+    <section id="projects" class="section">
+      <h2 class="label"><span>02</span> Projects</h2>
+
+      <div class="project-grid">
+        <article class="project">
+          <div class="project-media tab" aria-hidden="true">
+<pre>e|-----0---------3-----|
+B|---1---1-----0---0---|
+G|-0-------0-0-------0-|
+D|---------------------|
+A|---------------------|
+E|---------------------|</pre>
+          </div>
+          <h3>TabPlayer</h3>
+          <p>A Guitar Pro style tab viewer and player. Paste a Songsterr link for a full score with playback, in sync with the original recording from YouTube. Opens Guitar Pro and MusicXML files too.</p>
+          <p class="meta">Windows app · Web app</p>
+          <div class="actions">
+            <a class="button primary" href="https://github.com/nparbs/tabplayer/releases/latest">Download</a>
+            <a class="button" href="https://github.com/nparbs/tabplayer">Source</a>
+          </div>
+        </article>
+
+        <article class="project">
+          <div class="project-media">
+            <img src="assets/quickcut.jpg" width="1200" height="716" loading="lazy" alt="The QuickCut window with a clip list, video preview, timeline and export settings.">
+          </div>
+          <h3>QuickCut</h3>
+          <p>A desktop app for everyday video jobs: trim and join clips, add music and transitions, and compress to a size limit like 10 MB for Discord. Encodes on your GPU.</p>
+          <p class="meta">Windows app</p>
+          <div class="actions">
+            <a class="button primary" href="https://github.com/nparbs/QuickCut/releases/latest">Download</a>
+            <a class="button" href="https://github.com/nparbs/QuickCut">Source</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="content" class="section">
+      <h2 class="label"><span>03</span> Content</h2>
+
+      <figure class="video">
+        <video controls preload="none" playsinline poster="assets/scrap-riot-trailer-poster.jpg" width="1280" height="720">
+          <source src="assets/scrap-riot-trailer.mp4" type="video/mp4">
+          <a href="assets/scrap-riot-trailer.mp4">Download the Scrap Riot trailer</a>
+        </video>
+        <figcaption><strong>Scrap Riot trailer</strong> <span>0:29 · real in-game footage</span></figcaption>
+      </figure>
+    </section>
+
+    <section id="github" class="section">
+      <h2 class="label"><span>04</span> GitHub</h2>
+      <p class="intro">Older experiments and everything else that's public: bots, microcontrollers and small scripts.</p>
+      <ul class="repos" id="repos"></ul>
+      <a class="button" href="https://github.com/nparbs">All repositories on GitHub</a>
+    </section>
+  </main>
+
+  <footer class="bottom">
+    <span>Nick Parbs</span>
+    <a href="https://github.com/nparbs/parbs.online">Site source</a>
+  </footer>
+
+  <script src="main.js" defer></script>
+</body>
+</html>
