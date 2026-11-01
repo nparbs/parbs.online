@@ -7,6 +7,9 @@
   --muted: #a9a292;
   --accent: #ff8a2a;
   --on-accent: #17120a;
+  --purple: #2a1840;
+  --purple-tint: #241533;
+  --purple-glow: rgba(88, 44, 135, 0.34);
   --gutter: clamp(16px, 4vw, 48px);
   --mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
 }
@@ -21,6 +24,8 @@
     --muted: #5f5a4c;
     --accent: #c2500a;
     --on-accent: #fff8ee;
+    --purple-tint: #eadff3;
+    --purple-glow: rgba(88, 44, 135, 0.16);
   }
 }
 
@@ -30,10 +35,12 @@ html { scroll-behavior: smooth; scroll-padding-top: 24px; }
 
 body {
   margin: 0;
-  background: var(--bg);
+  background: radial-gradient(1000px 460px at 10% -60px, var(--purple-glow), transparent) no-repeat var(--bg);
   color: var(--text);
   font: 400 1.0625rem/1.6 Archivo, system-ui, sans-serif;
 }
+
+::selection { background: #582c87; color: #fff; }
 
 img, video { display: block; max-width: 100%; height: auto; }
 
@@ -120,7 +127,14 @@ h3 {
   justify-content: space-between;
   gap: 20px 48px;
   padding: clamp(20px, 3vw, 32px);
-  background: var(--surface);
+  /* Stays dark purple in both color schemes, so its colors are fixed here. */
+  --text: #f1ecdf;
+  --muted: #c3b6d4;
+  --line: #5a3f7d;
+  --accent: #ff8a2a;
+  --on-accent: #17120a;
+  background: var(--purple);
+  color: var(--text);
   border-top: 6px solid transparent;
   border-image: repeating-linear-gradient(-45deg, var(--accent) 0 12px, transparent 12px 24px) 6;
 }
@@ -173,12 +187,12 @@ h3 {
 .project-media.light { background: #f7f9f3; }
 .project-media.light img { object-fit: contain; object-position: center; }
 
-.art { display: grid; place-content: center; justify-items: center; gap: 12px; padding: 16px; }
+.art { display: grid; place-content: center; justify-items: center; gap: 12px; padding: 16px; background: var(--purple); }
 .art pre {
   margin: 0;
   max-width: 100%;
   overflow: hidden;
-  color: var(--accent);
+  color: #ff8a2a;
   font: 400 clamp(0.625rem, 1vw, 0.875rem)/1.5 var(--mono);
   font-variant-ligatures: none;
 }
@@ -208,7 +222,7 @@ h3 {
   text-decoration: none;
   transition: background-color 0.15s ease;
 }
-.repo a:hover { background: var(--surface); }
+.repo a:hover { background: var(--purple-tint); }
 .repo strong { font-weight: 700; overflow-wrap: anywhere; }
 .repo a:hover strong { color: var(--accent); }
 .repo p { margin: 4px 0 12px; color: var(--muted); font-size: 0.9375rem; line-height: 1.45; }
