@@ -1,6 +1,6 @@
 # parbs.online
 
-Source for [parbs.online](https://parbs.online), a landing page for my games, projects, content and GitHub repos.
+Source for [parbs.online](https://parbs.online), a landing page for my games, projects and GitHub repos.
 
 It's a static site with no build step. Everything published is in `site/`.
 
@@ -14,7 +14,7 @@ Then open <http://localhost:8000>.
 
 ## Updating it
 
-- **Games, projects and content:** edit `site/index.html`. Images and videos go in `site/assets/`.
+- **Games and projects:** edit `site/index.html`. Images and videos go in `site/assets/`.
 - **GitHub section:** public repos appear automatically. To hide one, or to stop listing a repo once it's featured, add it to `EXCLUDED` in `scripts/fetch-repos.mjs`.
 
 ## Deployment
