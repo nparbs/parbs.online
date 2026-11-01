@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&family=JetBrains+Mono:wght@400;600&display=swap">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=2">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -32,13 +32,15 @@
   <main id="main">
     <section class="hero">
       <h1>Parbs</h1>
-      <p>Games, apps and audio tools, with the source on GitHub.</p>
+      <p>I build games, apps and audio tools, mostly things I wanted to use myself. Right now that's a robot duelling game, a guitar amp sim, a tab player, a video editor, an Android app for indoor grows and a market terminal.</p>
+      <p>I've been putting projects on GitHub since 2016, and the source for everything here is public.</p>
     </section>
 
     <section id="games" class="section">
       <h2 class="label"><span>01</span> Games</h2>
 
       <article class="wip">
+        <img class="wip-logo" src="assets/scrap-riot-logo.png" width="360" height="360" alt="Scrap Riot logo">
         <div class="wip-body">
           <h3>Scrap Riot</h3>
           <p class="tag">Work in progress</p>
@@ -55,75 +57,77 @@
     <section id="projects" class="section">
       <h2 class="label"><span>02</span> Projects</h2>
 
-      <div class="project-grid">
+      <div class="project-list">
         <article class="project">
-          <div class="project-media art" aria-hidden="true">
-<pre>e|-----0---------3-----|
-B|---1---1-----0---0---|
-G|-0-------0-0-------0-|
-D|---------------------|
-A|---------------------|
-E|---------------------|</pre>
+          <div class="project-media">
+            <img src="assets/tabplayer.webp" width="1440" height="900" loading="lazy" alt="TabPlayer showing a riff as standard notation and tablature, with practice controls and a fretboard.">
           </div>
-          <h3>TabPlayer</h3>
-          <p>A Guitar Pro style tab viewer and player. Paste a Songsterr link for a full score with playback, in sync with the original recording from YouTube. Opens Guitar Pro and MusicXML files too.</p>
-          <p class="meta">Windows app · Web app</p>
-          <div class="actions">
-            <a class="button primary" href="https://github.com/nparbs/tabplayer/releases/latest">Download</a>
-            <a class="button" href="https://github.com/nparbs/tabplayer">Source</a>
+          <div class="project-body">
+            <h3>TabPlayer</h3>
+            <p>A Guitar Pro style tab viewer and player. Paste a Songsterr link for a full score with playback, in sync with the original recording from YouTube. Opens Guitar Pro and MusicXML files too.</p>
+            <p class="meta">Windows app · Web app</p>
+            <div class="actions">
+              <a class="button primary" href="https://github.com/nparbs/tabplayer/releases/latest">Download</a>
+              <a class="button" href="https://github.com/nparbs/tabplayer">Source</a>
+            </div>
           </div>
         </article>
 
         <article class="project">
           <div class="project-media">
-            <img src="assets/quickcut.jpg" width="1200" height="716" loading="lazy" alt="The QuickCut window with a clip list, video preview, timeline and export settings.">
+            <img src="assets/quickcut.webp" width="1500" height="900" loading="lazy" alt="QuickCut with three clips, a video preview, a filmstrip timeline with audio waveform, and export settings.">
           </div>
-          <h3>QuickCut</h3>
-          <p>A desktop app for everyday video jobs: trim and join clips, add music and transitions, and compress to a size limit like 10 MB for Discord. Encodes on your GPU.</p>
-          <p class="meta">Windows app</p>
-          <div class="actions">
-            <a class="button primary" href="https://github.com/nparbs/QuickCut/releases/latest">Download</a>
-            <a class="button" href="https://github.com/nparbs/QuickCut">Source</a>
-          </div>
-        </article>
-
-        <article class="project">
-          <div class="project-media art abyssal">
-            <img src="assets/abyssal-icon.png" width="256" height="256" loading="lazy" alt="">
-            <pre aria-hidden="true">IN → PEDALS → AMP → CAB → FX → OUT</pre>
-          </div>
-          <h3>Abyssal</h3>
-          <p>A high-gain guitar amp sim with four amp channels, Neural Amp Modeler captures, cab IRs and a pedalboard you can reorder.</p>
-          <p class="meta">VST3 · Standalone · Build from source</p>
-          <div class="actions">
-            <a class="button" href="https://github.com/nparbs/Abyssal">Source</a>
+          <div class="project-body">
+            <h3>QuickCut</h3>
+            <p>A desktop app for everyday video jobs: trim and join clips, add music and transitions, and compress to a size limit like 10 MB for Discord. Encodes on your GPU.</p>
+            <p class="meta">Windows app</p>
+            <div class="actions">
+              <a class="button primary" href="https://github.com/nparbs/QuickCut/releases/latest">Download</a>
+              <a class="button" href="https://github.com/nparbs/QuickCut">Source</a>
+            </div>
           </div>
         </article>
 
         <article class="project">
-          <div class="project-media light">
-            <img src="assets/growlog.png" width="1233" height="830" loading="lazy" alt="The GrowLog Today screen showing a plant card with its watering, pH, PPM and fertilizer readings.">
+          <div class="project-media">
+            <img src="assets/abyssal.webp" width="1182" height="828" loading="lazy" alt="Abyssal's post-amp effects page, with colorful pedals for phaser, chorus, flanger, tremolo, doubler, delay and reverb.">
           </div>
-          <h3>GrowLog</h3>
-          <p>An Android app for tracking indoor plant grows: watering, fertilizer, pH and PPM per plant, with photos and reminders. Your data stays on your device.</p>
-          <p class="meta">Android 8.0+</p>
-          <div class="actions">
-            <a class="button primary" href="https://github.com/nparbs/GrowLog/releases/latest">Download APK</a>
-            <a class="button" href="https://github.com/nparbs/GrowLog">Source</a>
+          <div class="project-body">
+            <h3>Abyssal</h3>
+            <p>A high-gain guitar amp sim with four amp channels, Neural Amp Modeler captures, cab IRs and a pedalboard you can reorder.</p>
+            <p class="meta">VST3 · Standalone · Build from source</p>
+            <div class="actions">
+              <a class="button" href="https://github.com/nparbs/Abyssal">Source</a>
+            </div>
           </div>
         </article>
 
         <article class="project">
-          <div class="project-media art" aria-hidden="true">
-<pre>POST  →  +5m  →  +30m  →  +60m
-
-SPY   QQQ   NVDA   TSLA   BTC</pre>
+          <div class="project-media">
+            <img src="assets/growlog.webp" width="1600" height="1000" loading="lazy" alt="Three GrowLog screens: today's plants, a daily log with pH, PPM and fertilizer, and a new reminder.">
           </div>
-          <h3>Market Terminal</h3>
-          <p>A Bloomberg-style terminal that runs on your own machine. It watches market-moving posts and shows how prices moved after each one.</p>
-          <p class="meta">Local web app · Python</p>
-          <div class="actions">
-            <a class="button" href="https://github.com/nparbs/market-terminal">Source</a>
+          <div class="project-body">
+            <h3>GrowLog</h3>
+            <p>An Android app for tracking indoor plant grows: watering, fertilizer, pH and PPM per plant, with photos and reminders. Your data stays on your device.</p>
+            <p class="meta">Android 8.0+</p>
+            <div class="actions">
+              <a class="button primary" href="https://github.com/nparbs/GrowLog/releases/latest">Download APK</a>
+              <a class="button" href="https://github.com/nparbs/GrowLog">Source</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project">
+          <div class="project-media">
+            <img src="assets/market-terminal.webp" width="1600" height="900" loading="lazy" alt="Market Terminal with a watchlist of live quotes beside a candlestick chart marked where market-moving posts landed.">
+          </div>
+          <div class="project-body">
+            <h3>Market Terminal</h3>
+            <p>A Bloomberg-style terminal that runs on your own machine. It watches market-moving posts and shows how prices moved after each one.</p>
+            <p class="meta">Local web app · Python</p>
+            <div class="actions">
+              <a class="button" href="https://github.com/nparbs/market-terminal">Source</a>
+            </div>
           </div>
         </article>
       </div>
