@@ -142,9 +142,20 @@ h3 {
 
 .wip-logo { flex: none; width: clamp(112px, 14vw, 168px); }
 
+.wip + .wip { margin-top: clamp(24px, 4vw, 40px); }
+
+.wip-shot {
+  flex: 1 1 18rem;
+  min-width: 0;
+  max-width: 480px;
+  border: 1px solid var(--line);
+  image-rendering: pixelated;
+}
+
 .wip-body { flex: 1 1 18rem; }
 .wip-body h3 { margin-bottom: 4px; }
 .wip-body p { margin: 0 0 12px; }
+.wip-body .actions { margin-top: 20px; }
 .wip-body .tag { color: var(--accent); font: 600 0.8125rem/1.5 var(--mono); }
 
 .video { flex: 1 0 100%; margin: 0; }
