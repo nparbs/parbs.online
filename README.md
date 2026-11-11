@@ -7,7 +7,7 @@ It's a static site with no build step. Everything published is in `site/`.
 ## Updating it
 
 - **Games and projects:** edit `site/index.html`. Images and videos go in `site/assets/`.
-- **Styles:** Cloudflare caches `styles.css` for hours, so bump the `?v=` number on its link in `site/index.html` whenever you change it.
+- **Styles and script:** Cloudflare caches `styles.css` and `main.js` for hours, so bump the `?v=` number on the file's link in `site/index.html` whenever you change one.
 - **GitHub section:** public repos appear automatically. To hide one, or to stop listing a repo once it's featured, add it to `EXCLUDED` in `scripts/fetch-repos.mjs`.
 
 ## Deployment

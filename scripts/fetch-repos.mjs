@@ -7,7 +7,7 @@ const OUTPUT = new URL('../site/repos.json', import.meta.url);
 // Already featured higher up the page, or not worth a card (site repos, 2016 coursework).
 const EXCLUDED = new Set([
   'parbs.online', 'nparbs.github.io', 'scrap-riot', 'tabplayer', 'QuickCut',
-  'Abyssal', 'GrowLog', 'market-terminal', 'trailer-park-tamers', 'rift-daily',
+  'Abyssal', 'GrowLog', 'market-terminal', 'trailer-park-tamers', 'rift-daily', 'permafrost', 'crunch-rally',
   'AdvjavaWK1', 'bookWebApp', 'Calculator', 'Class3Lab', 'DateTimePractice',
   'Encapsulation', 'ExceptionsLab', 'FilePractice', 'FirstGui', 'GenericsAndMaps',
   'GenericsAndSets', 'HelloApp', 'InterfaceAbstractLab', 'LabDIP', 'NJP.DiscountStrategy',

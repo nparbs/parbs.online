@@ -11,6 +11,7 @@
   --purple-tint: #241533;
   --purple-glow: rgba(88, 44, 135, 0.34);
   --gutter: clamp(16px, 4vw, 48px);
+  --pad: clamp(18px, 2.4vw, 28px);
   --mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
 }
 
@@ -107,60 +108,150 @@ a { color: inherit; }
 }
 
 .label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
   margin: 0 0 clamp(24px, 3vw, 36px);
   font: 600 0.875rem/1.4 var(--mono);
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
-.label span { margin-right: 8px; color: var(--accent); }
+.label span { color: var(--accent); }
+.label small {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 400;
+}
 
 h3 {
-  margin: 0 0 12px;
-  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  margin: 0 0 10px;
+  font-size: clamp(1.625rem, 2.6vw, 2.25rem);
   font-weight: 800;
   font-stretch: 85%;
   line-height: 1.05;
 }
 
-.wip {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 20px clamp(24px, 4vw, 48px);
-  padding: clamp(20px, 3vw, 32px);
+.game-grid, .project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(16px, 2.2vw, 28px);
+}
+
+/* Games: one card per game, each lit in its own color (--c, set inline). */
+.game {
   /* Stays dark purple in both color schemes, so its colors are fixed here. */
   --text: #f1ecdf;
   --muted: #c3b6d4;
-  --line: #5a3f7d;
-  --accent: #ff8a2a;
+  --line: #4a3368;
+  --accent: var(--c);
   --on-accent: #17120a;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   background: var(--purple);
   color: var(--text);
-  border-top: 6px solid transparent;
-  border-image: repeating-linear-gradient(-45deg, var(--accent) 0 12px, transparent 12px 24px) 6;
-}
-
-.wip-logo { flex: none; width: clamp(112px, 14vw, 168px); }
-
-.wip + .wip { margin-top: clamp(24px, 4vw, 40px); }
-
-.wip-shot {
-  flex: 1 1 18rem;
-  min-width: 0;
-  max-width: 480px;
   border: 1px solid var(--line);
-  image-rendering: pixelated;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
-.wip-shot.smooth { image-rendering: auto; }
+/* Hazard stripe along the top edge, in the game's color. */
+.game::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 2;
+  height: 5px;
+  background: repeating-linear-gradient(-45deg, var(--c) 0 10px, transparent 10px 20px);
+}
+.game:hover, .game:focus-within {
+  transform: translateY(-4px);
+  border-color: var(--c);
+  box-shadow: 0 28px 56px -28px var(--c);
+}
 
-.wip-body { flex: 1 1 18rem; }
-.wip-body h3 { margin-bottom: 4px; }
-.wip-body p { margin: 0 0 12px; }
-.wip-body .actions { margin-top: 20px; }
-.wip-body .tag { color: var(--accent); font: 600 0.8125rem/1.5 var(--mono); }
+.game-shot {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+.game-shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+.game-shot img.pixel { image-rendering: pixelated; }
+.game:hover .game-shot img { transform: scale(1.05); }
+.game-shot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(transparent 78%, var(--purple));
+}
+.play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  padding: 10px 20px;
+  background: var(--c);
+  color: var(--on-accent);
+  font: 600 0.875rem/1.4 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translate(-50%, -30%);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.play::before { content: '\25B6\FE0E\00A0\00A0'; }
+.game-shot:hover .play { opacity: 1; transform: translate(-50%, -50%); }
 
-.video { flex: 1 0 100%; margin: 0; }
-.video video { width: 100%; background: #000; }
+.game-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 12px var(--pad) var(--pad);
+}
+.game-body p { margin: 0 0 12px; }
+.game-body .tag {
+  margin-bottom: 6px;
+  color: var(--c);
+  font: 600 0.75rem/1.5 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.game-body .tag::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--c);
+  box-shadow: 0 0 8px var(--c);
+  vertical-align: 1px;
+}
+.game-body .note { color: var(--muted); font-size: 0.875rem; line-height: 1.5; }
+.game-body .actions { margin-top: auto; padding-top: 8px; }
+
+/* The wide card: text on the left, trailer on the right. */
+.game.feature, .project.feature { grid-column: 1 / -1; }
+.game.feature {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  align-items: center;
+  background: radial-gradient(640px 340px at 0% 0%, rgba(255, 138, 42, 0.2), transparent) var(--purple);
+}
+.game.feature .game-body { padding-top: calc(var(--pad) + 8px); }
+.game.feature h3 { font-size: clamp(2rem, 3.6vw, 3rem); }
+.feature-logo { width: clamp(96px, 11vw, 136px); margin-bottom: 16px; }
+
+.video { margin: 0; padding: calc(var(--pad) + 8px) var(--pad) var(--pad) 0; }
+.video video { width: 100%; background: #000; border: 1px solid var(--line); }
 .video figcaption {
   display: flex;
   flex-wrap: wrap;
@@ -185,29 +276,70 @@ h3 {
 .button.primary { border-color: var(--accent); background: var(--accent); color: var(--on-accent); }
 .button.primary:hover { filter: brightness(1.1); }
 
-.wip-body .note {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.875rem;
-  line-height: 1.5;
+/* Projects: screenshots sit in a small window frame. */
+.project {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.project:hover, .project:focus-within {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: 0 28px 56px -32px var(--accent);
 }
 
-.project-list { display: grid; gap: clamp(40px, 6vw, 72px); }
+.project-media { background: var(--purple); }
+.project-media::before {
+  content: '';
+  display: block;
+  height: 26px;
+  background:
+    radial-gradient(circle, #ff8a2a 4px, transparent 4.5px) 12px 50% / 10px 10px no-repeat,
+    radial-gradient(circle, #8e6bb8 4px, transparent 4.5px) 28px 50% / 10px 10px no-repeat,
+    radial-gradient(circle, #5a3f7d 4px, transparent 4.5px) 44px 50% / 10px 10px no-repeat;
+}
+.project-media img { width: 100%; }
 
-.project {
+.project-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: var(--pad);
+}
+.project-body p { margin: 0 0 14px; }
+.project-body .actions { margin-top: auto; }
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 20px;
+  padding: 0;
+  list-style: none;
+}
+.chips li {
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font: 400 0.75rem/1.6 var(--mono);
+}
+
+.project.feature {
   display: grid;
   grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
   align-items: center;
-  gap: clamp(24px, 4vw, 48px);
 }
-.project:nth-child(even) { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); }
-.project:nth-child(even) .project-media { order: 2; }
+.project.feature .project-media { align-self: stretch; }
+.project.feature .project-body { flex: none; }
 
-.project p { margin: 0 0 16px; }
-.project .meta { color: var(--muted); font: 400 0.8125rem/1.5 var(--mono); }
-
-.project-media { padding: clamp(6px, 1vw, 12px); background: var(--purple); }
-.project-media img { width: 100%; }
+/* Cards rise into place as they scroll into view (main.js adds these classes). */
+.reveal-wait { opacity: 0; }
+.reveal-in { animation: rise 0.6s ease backwards; }
+@keyframes rise {
+  from { opacity: 0; transform: translateY(28px); }
+}
 
 .intro { max-width: 38rem; margin: 0 0 24px; color: var(--muted); }
 
@@ -248,11 +380,11 @@ h3 {
 }
 
 @media (max-width: 800px) {
-  .project, .project:nth-child(even) { grid-template-columns: minmax(0, 1fr); }
-  .project:nth-child(even) .project-media { order: 0; }
+  .game-grid, .project-grid, .game.feature, .project.feature { grid-template-columns: minmax(0, 1fr); }
+  .video { padding: 0 var(--pad) var(--pad); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  * { transition: none !important; }
+  * { transition: none !important; animation: none !important; }
 }
