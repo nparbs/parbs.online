@@ -15,32 +15,77 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&family=JetBrains+Mono:wght@400;600&display=swap">
-  <link rel="stylesheet" href="styles.css?v=7">
+  <link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
+  <div class="progress" aria-hidden="true"></div>
+  <canvas class="embers" aria-hidden="true"></canvas>
 
   <header class="top">
-    <a class="wordmark" href="#main">parbs<span>.online</span></a>
-    <nav aria-label="Sections">
-      <a href="#games">Games</a>
-      <a href="#projects">Projects</a>
-      <a href="#github">GitHub</a>
-    </nav>
+    <div class="top-in">
+      <a class="wordmark" href="#main">parbs<span>.online</span></a>
+      <nav aria-label="Sections">
+        <a href="#games">Games</a>
+        <a href="#projects">Projects</a>
+        <a href="#github">GitHub</a>
+      </nav>
+    </div>
   </header>
 
   <main id="main">
     <section class="hero">
-      <h1>I build games, apps and audio tools.</h1>
+      <a class="eyebrow" href="#magma-hop"><span class="pulse"></span>New: Magma Hop is live <span class="arrow">&rarr;</span></a>
+      <h1 class="split">I build <em>games</em>, apps and audio tools.</h1>
       <p>Mostly things I wanted to use myself. Right now that's six browser games you can play from this page, plus a guitar amp sim, a tab player, a video editor, an Android app for indoor grows and a market terminal.</p>
       <p>I've been putting projects on GitHub since 2016, and the source for everything here is public.</p>
+      <ul class="stats">
+        <li><b data-count="6">6</b> browser games</li>
+        <li><b data-count="5">5</b> apps and tools</li>
+        <li><b data-count="2016" data-from="2006">2016</b> first public repo</li>
+      </ul>
     </section>
+
+    <div class="marquee" aria-hidden="true">
+      <div class="track">
+        <span>TypeScript</span><span>Three.js</span><span>Phaser 3</span><span>Canvas 2D</span><span>Node.js</span><span>WebSockets</span><span>SQLite</span><span>C++</span><span>Python</span><span>PySide6</span><span>FFmpeg</span><span>Kotlin</span><span>Android</span><span>Docker</span>
+        <span>TypeScript</span><span>Three.js</span><span>Phaser 3</span><span>Canvas 2D</span><span>Node.js</span><span>WebSockets</span><span>SQLite</span><span>C++</span><span>Python</span><span>PySide6</span><span>FFmpeg</span><span>Kotlin</span><span>Android</span><span>Docker</span>
+      </div>
+    </div>
 
     <section id="games" class="section">
       <h2 class="label"><span>01</span> Games <small>6 to play in your browser</small></h2>
 
       <div class="game-grid">
-        <article class="game feature" style="--c: #ff8a2a">
+        <article id="magma-hop" class="game feature lead" style="--c: #ff5a2e">
+          <div class="game-body">
+            <img class="feature-logo pixel" src="assets/magma-hop-logo.png?v=1" width="64" height="50" alt="Magma Hop logo">
+            <p class="tag">Online · New</p>
+            <h3>Magma Hop</h3>
+            <p>Hop up an erupting volcano with the lava right behind you. You bounce on every ledge by yourself and only steer left and right, past fire bats, rockfalls and crumbling ledges, through six zones from the magma chamber to the ash clouds.</p>
+            <ul class="chips"><li>Global height board</li><li>Daily Climb with your ghost</li><li>Watch top runs</li><li>Tilt to steer on phones</li></ul>
+            <div class="actions">
+              <a class="button primary" href="https://magmahop.parbs.online/">Play in browser</a>
+              <a class="button" href="https://github.com/nparbs/magma-hop">Source</a>
+            </div>
+          </div>
+          <a class="stage" href="https://magmahop.parbs.online/" tabindex="-1" aria-hidden="true">
+            <video class="pixel" muted loop playsinline autoplay preload="metadata" poster="assets/magma-hop-loop-poster.webp?v=1" width="540" height="720">
+              <source src="assets/magma-hop-loop.mp4?v=1" type="video/mp4">
+            </video>
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            <span class="play">Play</span>
+          </a>
+        </article>
+
+        <article class="game feature alt" style="--c: #ff8a2a">
+          <figure class="video">
+            <video controls preload="none" playsinline poster="assets/scrap-riot-trailer-poster.jpg?v=3" width="1280" height="720">
+              <source src="assets/scrap-riot-trailer.mp4?v=3" type="video/mp4">
+              <a href="assets/scrap-riot-trailer.mp4?v=3">Download the Scrap Riot promo video</a>
+            </video>
+            <figcaption><strong>Promo video</strong> <span>0:30</span></figcaption>
+          </figure>
           <div class="game-body">
             <img class="feature-logo" src="assets/scrap-riot-logo.png" width="360" height="360" alt="Scrap Riot logo">
             <p class="tag">Work in progress</p>
@@ -50,29 +95,6 @@
             <div class="actions">
               <a class="button primary" href="https://nparbs.github.io/scrap-riot/">Play in browser</a>
               <a class="button" href="https://github.com/nparbs/scrap-riot">Source</a>
-            </div>
-          </div>
-          <figure class="video">
-            <video controls preload="none" playsinline poster="assets/scrap-riot-trailer-poster.jpg?v=3" width="1280" height="720">
-              <source src="assets/scrap-riot-trailer.mp4?v=3" type="video/mp4">
-              <a href="assets/scrap-riot-trailer.mp4?v=3">Download the Scrap Riot promo video</a>
-            </video>
-            <figcaption><strong>Promo video</strong> <span>0:30</span></figcaption>
-          </figure>
-        </article>
-
-        <article class="game" style="--c: #ff5a2e">
-          <a class="game-shot" href="https://magmahop.parbs.online/" tabindex="-1" aria-hidden="true">
-            <img class="pixel" src="assets/magma-hop.webp?v=1" width="854" height="480" loading="lazy" alt="Magma Hop: a small ember climber bouncing between icy ledges in a pixel-art volcano shaft, with the lava rising below.">
-            <span class="play">Play</span>
-          </a>
-          <div class="game-body">
-            <p class="tag">Online · New</p>
-            <h3>Magma Hop</h3>
-            <p>Hop up an erupting volcano with the lava right behind you. You bounce on every ledge by yourself and only steer left and right, past fire bats, rockfalls and crumbling ledges. Climb for the global height board, or try the Daily Climb, where everyone gets the same volcano.</p>
-            <div class="actions">
-              <a class="button primary" href="https://magmahop.parbs.online/">Play in browser</a>
-              <a class="button" href="https://github.com/nparbs/magma-hop">Source</a>
             </div>
           </div>
         </article>
@@ -237,6 +259,6 @@
     <a href="https://github.com/nparbs/parbs.online">Site source</a>
   </footer>
 
-  <script src="main.js?v=2" defer></script>
+  <script src="main.js?v=3" defer></script>
 </body>
 </html>
