@@ -116,7 +116,7 @@ a { color: inherit; }
 .top-in {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 8px 24px;
   padding-block: 20px;
@@ -243,31 +243,34 @@ a { color: inherit; }
   letter-spacing: 0;
 }
 
-/* Tech ticker, full width under the hero. */
+/* Tech ticker, tucked into the header between the wordmark and the links. */
 .marquee {
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  margin-bottom: clamp(8px, 2vw, 24px);
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 560px;
+  margin-inline: auto;
   overflow: hidden;
-  border-block: 1px solid var(--line);
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  opacity: 0.75;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+  transition: opacity 0.2s ease;
 }
+.marquee:hover { opacity: 1; }
 .track {
   display: flex;
   width: max-content;
-  animation: scroll-x 48s linear infinite;
+  animation: scroll-x 60s linear infinite;
 }
 .marquee:hover .track { animation-play-state: paused; }
 .track span {
-  padding: 14px 0;
   color: var(--muted);
-  font: 600 0.8125rem/1.4 var(--mono);
+  font: 400 0.75rem/1.4 var(--mono);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   white-space: nowrap;
 }
-.track span::after { content: '\2726'; margin-inline: 22px; color: var(--hot-1); }
+.track span::after { content: '\2726'; margin-inline: 14px; color: var(--hot-1); }
+@media (max-width: 720px) { .marquee { display: none; } }
 @keyframes scroll-x { to { transform: translateX(-50%); } }
 
 /* Sections: the top rule draws itself in. */
