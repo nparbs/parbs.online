@@ -6,6 +6,14 @@
   <title>Page not found · Parbs</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/styles.css?v=9">
+  <script id="winxp-redirect">
+    (function () {
+      var p = location.pathname;
+      if (/^\/winxp(\/|$)/i.test(p) && !/^\/WinXP\//.test(p)) {
+        location.replace('/WinXP/' + p.replace(/^\/winxp\/?/i, '') + location.search + location.hash);
+      }
+    })();
+  </script>
 </head>
 <body>
   <main>
