@@ -313,3 +313,21 @@ if (canvas && !reduceMotion && canvas.getContext) {
   }
   update();
 }
+
+// ---- Trailer popup --------------------------------------------------------
+// The button is a plain link to the video, so it still works without script or <dialog>.
+
+for (const open of document.querySelectorAll('[data-trailer]')) {
+  const dialog = document.getElementById(open.dataset.trailer);
+  if (!dialog || typeof dialog.showModal !== 'function') continue;
+  const video = dialog.querySelector('video');
+  open.addEventListener('click', (e) => {
+    e.preventDefault();
+    dialog.showModal();
+    video.play().catch(() => {});
+  });
+  dialog.querySelector('.trailer-close').addEventListener('click', () => dialog.close());
+  // A click on the dimmed backdrop lands on the dialog itself.
+  dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+  dialog.addEventListener('close', () => video.pause());
+}

@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&family=JetBrains+Mono:wght@400;600&display=swap">
-  <link rel="stylesheet" href="styles.css?v=9">
+  <link rel="stylesheet" href="styles.css?v=10">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -65,8 +65,15 @@
             <ul class="chips"><li>Global height board</li><li>Daily race to the summit</li><li>See others climbing live</li><li>Watch top runs</li><li>Tilt to steer on phones</li></ul>
             <div class="actions">
               <a class="button primary" href="https://magmahop.parbs.online/">Play in browser</a>
+              <a class="button trailer-open" href="assets/magma-hop-trailer.mp4?v=1" data-trailer="magma-hop-trailer">&#9654; Watch trailer <span>0:18</span></a>
               <a class="button" href="https://github.com/nparbs/magma-hop">Source</a>
             </div>
+            <dialog id="magma-hop-trailer" class="trailer" aria-label="Magma Hop trailer">
+              <video controls playsinline preload="none" poster="assets/magma-hop-trailer-poster.webp?v=1" width="1080" height="1920">
+                <source src="assets/magma-hop-trailer.mp4?v=1" type="video/mp4">
+              </video>
+              <button class="trailer-close" type="button" aria-label="Close trailer">&times;</button>
+            </dialog>
           </div>
           <a class="stage" href="https://magmahop.parbs.online/" tabindex="-1" aria-hidden="true">
             <video class="pixel" muted loop playsinline autoplay preload="metadata" poster="assets/magma-hop-loop-poster.webp?v=2" width="540" height="720">
@@ -258,6 +265,6 @@
     <a href="https://github.com/nparbs/parbs.online">Site source</a>
   </footer>
 
-  <script src="main.js?v=3" defer></script>
+  <script src="main.js?v=4" defer></script>
 </body>
 </html>
