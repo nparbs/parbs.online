@@ -587,6 +587,36 @@ h3 {
 .button.primary { border-color: var(--accent); background: var(--accent); color: var(--on-accent); }
 .button.primary:hover { box-shadow: 0 10px 26px -10px var(--accent); }
 
+.trailer-open span { margin-left: 4px; color: var(--muted); font-weight: 400; }
+
+/* Trailer popup: a vertical video over a dimmed page. */
+.trailer {
+  padding: 0;
+  border: 1px solid var(--line);
+  background: #000;
+  color: var(--text);
+  overflow: visible;
+  max-width: calc(100vw - 32px);
+}
+.trailer::backdrop { background: rgba(10, 8, 6, 0.82); backdrop-filter: blur(4px); }
+.trailer[open] { animation: trailer-in 0.3s var(--ease-out); }
+.trailer video { display: block; width: auto; height: min(86vh, calc((100vw - 32px) * 16 / 9)); max-width: 100%; aspect-ratio: 9 / 16; }
+.trailer-close {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  font: 700 1.25rem/1 var(--mono);
+  cursor: pointer;
+}
+@keyframes trailer-in { from { opacity: 0; transform: translateY(12px) scale(0.97); } to { opacity: 1; transform: none; } }
+@media (max-width: 520px) { .trailer-close { top: 8px; right: 8px; } }
+
 /* Projects: screenshots sit in a small window frame. */
 .project {
   position: relative;
