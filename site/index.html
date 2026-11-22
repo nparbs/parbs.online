@@ -41,19 +41,19 @@
 
   <main id="main">
     <section class="hero">
-      <a class="eyebrow" href="#putt-daily"><span class="pulse"></span>New: Putt Daily <span class="arrow">&rarr;</span></a>
+      <a class="eyebrow" href="#sticky-business"><span class="pulse"></span>New: Sticky Business <span class="arrow">&rarr;</span></a>
       <h1 class="split">I build <em>games</em>, apps and audio tools.</h1>
-      <p>Mostly things I wanted to use myself. Right now that's seven browser games you can play from this page, plus a guitar amp sim, a tab player, a video editor, an Android app for indoor grows and a market terminal.</p>
-      <p>I've been putting projects on GitHub since 2016, and the source for everything here is public.</p>
+      <p>Mostly things I wanted to use myself. Right now that's eight browser games you can play from this page, plus a 3D rotary engine teardown, a guitar amp sim, a tab player, a video editor, an Android app for indoor grows and a market terminal.</p>
+      <p>I've been putting projects on GitHub since 2016, and the source for most of what's here is public.</p>
       <ul class="stats">
-        <li><b data-count="7">7</b> browser games</li>
-        <li><b data-count="5">5</b> apps and tools</li>
+        <li><b data-count="8">8</b> browser games</li>
+        <li><b data-count="6">6</b> apps and tools</li>
         <li><b data-count="2016" data-from="2006">2016</b> first public repo</li>
       </ul>
     </section>
 
     <section id="games" class="section">
-      <h2 class="label"><span>01</span> Games <small>7 to play in your browser</small></h2>
+      <h2 class="label"><span>01</span> Games <small>8 to play in your browser</small></h2>
 
       <div class="game-grid">
         <article id="magma-hop" class="game feature lead" style="--c: #ff5a2e">
@@ -105,13 +105,28 @@
           </div>
         </article>
 
+        <article id="sticky-business" class="game" style="--c: #7bc950">
+          <a class="game-shot" href="https://grow.parbs.online/" tabindex="-1" aria-hidden="true">
+            <img src="assets/sticky-business.webp?v=1" width="1280" height="720" loading="lazy" alt="Sticky Business: a grow tent in a garage with four flowering plants in fabric pots under a hanging light, with a reservoir, power strip and shelves around it.">
+            <span class="play">Play</span>
+          </a>
+          <div class="game-body">
+            <p class="tag">Idle grow sim · New</p>
+            <h3>Sticky Business</h3>
+            <p>A comedy grow sim with real technique. Start with one tent in Uncle Dale's garage, keep pH, feed, light height and VPD in range, then harvest, dry, cure and sell. Work up to rooms full of tents with their own climate, smart controllers and grow tournaments. Plants keep growing while you're away.</p>
+            <div class="actions">
+              <a class="button primary" href="https://grow.parbs.online/">Play in browser</a>
+            </div>
+          </div>
+        </article>
+
         <article id="putt-daily" class="game" style="--c: #7ad66b">
           <a class="game-shot" href="https://putt.parbs.online/" tabindex="-1" aria-hidden="true">
             <img src="assets/putt-daily.webp?v=1" width="1280" height="720" loading="lazy" alt="Putt Daily: three phone screens of top-down mini-golf holes with wooden rails, one in rain, one in snow and one at night with lamp light round the cup and ball.">
             <span class="play">Play</span>
           </a>
           <div class="game-body">
-            <p class="tag">Daily · New</p>
+            <p class="tag">Daily</p>
             <h3>Putt Daily</h3>
             <p>Nine new mini-golf holes every day, the same for everyone. Drag back from the ball and let go to putt, past sand, water, slopes and bumpers, then see where you rank on the daily leaderboard and replay everyone's shots on each hole. The course is drawn in your real local weather, so rain, snow, fog or night roll in with it, but the holes and your score never change.</p>
             <div class="actions">
@@ -190,9 +205,23 @@
     </section>
 
     <section id="projects" class="section">
-      <h2 class="label"><span>02</span> Projects <small>Apps and audio tools</small></h2>
+      <h2 class="label"><span>02</span> Projects <small>Apps, audio tools and a 3D showcase</small></h2>
 
       <div class="project-grid">
+        <article id="rotary-engine" class="project feature">
+          <div class="project-media">
+            <img src="assets/rotary-engine.webp?v=1" width="1280" height="720" loading="lazy" alt="TRIAD R3 showcase: a three-rotor rotary engine pulled apart along its shaft into its housings, with the intake and exhaust lifted off, beside a panel explaining the stack.">
+          </div>
+          <div class="project-body">
+            <h3>TRIAD R3 Rotary Engine</h3>
+            <p>A scroll-driven 3D teardown of a made-up three-rotor Wankel. Scroll and it comes apart piece by piece, shows the rotor cycle, then explains each part. At the end it drops into the car, starts up and revs, with sound and a working gauge cluster. Or press Watch and let it play like a video.</p>
+            <ul class="chips"><li>Web page</li><li>Three.js</li><li>Works on phones</li></ul>
+            <div class="actions">
+              <a class="button primary" href="rotary-engine-showcase/">Open the showcase</a>
+            </div>
+          </div>
+        </article>
+
         <article class="project feature">
           <div class="project-media">
             <img src="assets/tabplayer.webp" width="1440" height="900" loading="lazy" alt="TabPlayer showing a riff as standard notation and tablature, with practice controls and a fretboard.">
