@@ -384,16 +384,26 @@ function camAt(s) {
 }
 
 // ---------------------------------------------------------------- layout & scroll
-let narrow = false, distK = 1;
+let narrow = false, distK = 1, viewH = innerHeight;
+// On phones the text sits in a fixed panel at the bottom (every card stacked in the same spot),
+// so the 3D view only gets the space above the tallest panel.
+const DOCK_SEL = '.card, .specs-inner, .hero-inner';
+function dockHeight() {
+  let m = 0;
+  document.querySelectorAll(DOCK_SEL).forEach(el => { m = Math.max(m, el.offsetHeight); });
+  return m;
+}
 function layout() {
   const w = innerWidth, h = innerHeight;
   narrow = w < 820;
-  renderer.setSize(w, h, false);
-  const aspect = w / h;
+  viewH = narrow ? Math.max(200, h - dockHeight() + 14) : h;
+  document.documentElement.style.setProperty('--viewH', `${viewH}px`);
+  renderer.setSize(w, viewH, false);
+  const aspect = w / viewH;
   camera.aspect = aspect;
   camera.fov = aspect >= 1.2 ? 35 : lerp(35, 46, clamp((1.2 - aspect) / 0.7));
   distK = aspect >= 1.2 ? 1 : 1 + (1.2 - aspect) * 1.05;
-  camera.setViewOffset(w, h, narrow ? 0 : -w * 0.17, narrow ? h * 0.17 : 0, w, h);
+  camera.setViewOffset(w, viewH, narrow ? 0 : -w * 0.17, narrow ? viewH * 0.04 : 0, w, viewH);
   camera.updateProjectionMatrix();
   measure();
 }
@@ -443,6 +453,7 @@ const showQ = new THREE.Quaternion(), localQ = new THREE.Quaternion(), eul = new
 const phaseCols = PHASES.map(p => new THREE.Color(p.color));
 const flashCol = new THREE.Color('#fff1b8'), tmpC = new THREE.Color();
 
+let lastCur = -2;
 function frame(now) {
   const dt = Math.min(0.05, (now - last) / 1000);
   last = now;
@@ -549,11 +560,6 @@ function frame(now) {
   [st[0].group, st[1].group, eng.gears[0].group, eng.pulley, eng.acc, eng.intake, eng.exhaust, eng.pan, eng.plugGroup, eng.boltGroup].forEach(o => setFade(o, keepF));
 
   // ---- camera
-  if (narrow) {
-    // on phones, lift the model higher while the hero title is on screen
-    const w0 = innerWidth, h0 = innerHeight;
-    camera.setViewOffset(w0, h0, 0, h0 * lerp(0.27, 0.17, ss(0.4, 1.0, s)), w0, h0);
-  }
   camAt(s);
   mouse.x += (mouse.tx - mouse.x) * (1 - Math.exp(-dt * 3));
   mouse.y += (mouse.ty - mouse.y) * (1 - Math.exp(-dt * 3));
@@ -627,7 +633,7 @@ function frame(now) {
   flashLight.intensity = flash * cham * 18;
 
   // ---- tags
-  const w = innerWidth, h = innerHeight;
+  const w = innerWidth, h = viewH;
   tags.forEach(tg => {
     const vis = tg.group === 'tear' ? tear : cham;
     if (vis < 0.01) { if (tg.on) { tg.el.style.opacity = 0; tg.on = false; } return; }
@@ -660,6 +666,8 @@ function frame(now) {
     ui.readout.textContent = `SHAFT ${String(Math.round(wrap(shaftDeg - 630, 1080))).padStart(4, '0')}° / 1080°  ·  ROTOR ${String(Math.round(wrap(shaftDeg - 630, 1080) / 3)).padStart(3, '0')}°`;
   }
   sections.forEach((sec, i) => sec.classList.toggle('on', s > i - 0.3 && s < i + 1.02));
+  const cur = Math.floor(s + 0.22);   // the one section whose text shows in the phone panel
+  if (cur !== lastCur) { lastCur = cur; sections.forEach((sec, i) => sec.classList.toggle('cur', i === cur)); }
   let ch = 0;
   CHAPTERS.forEach(([, cs], i) => { if (s >= cs - 0.3) ch = i; });
   ui.rail.forEach((bt, i) => bt.classList.toggle('on', i === ch));
@@ -682,6 +690,9 @@ async function boot() {
     sCur = scrollS();
   }
   addEventListener('resize', layout);
+  document.fonts?.addEventListener?.('loadingdone', layout);
+  // video mode adds room under the phone panel for the tour bar, so re-fit the view
+  new MutationObserver(layout).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
   addEventListener('load', measure);
   new ResizeObserver(measure).observe(document.body);
   addEventListener('pointermove', e => {
