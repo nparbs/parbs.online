@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TRIAD R3 · Triple-Rotor Powertrain</title>
+<meta name="description" content="An interactive teardown of the TRIAD R3 triple-rotor Wankel engine. Scroll to take it apart and see what every component does.">
+<meta name="theme-color" content="#0a0c0f">
+<meta property="og:title" content="TRIAD R3 · Triple-Rotor Powertrain">
+<meta property="og:description" content="Scroll to take a three-rotor Wankel engine apart, piece by piece.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0c0f'/%3E%3Cpath d='M16 5 L26 22 L6 22 Z' fill='none' stroke='%23ff5b1f' stroke-width='2.6' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='16.5' r='2.6' fill='%23ff5b1f'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=1">
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="shade" aria-hidden="true"></div>
+<div id="labels" aria-hidden="true"></div>
+
+<div id="loader">
+  <div class="loader-inner">
+    <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4.5 L27 23 L5 23 Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><circle cx="16" cy="16.8" r="2.6" fill="currentColor"/></svg>
+    <div class="loader-word">TRIAD <b>R3</b></div>
+    <div class="loader-bar"><i></i></div>
+    <div class="loader-note mono">Machining components</div>
+  </div>
+</div>
+
+<header class="nav">
+  <a class="brand" href="#top" aria-label="TRIAD R3, back to top">
+    <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4.5 L27 23 L5 23 Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><circle cx="16" cy="16.8" r="2.6" fill="currentColor"/></svg>
+    <span>TRIAD</span><em>R3</em>
+  </a>
+  <nav class="links mono" aria-label="Sections">
+    <a href="#teardown">Teardown</a>
+    <a href="#cycle">Cycle</a>
+    <a href="#components">Components</a>
+    <a href="#specs">Specification</a>
+    <a href="#installed">Installed</a>
+  </nav>
+  <div class="nav-actions">
+    <button class="btn btn-ghost nav-play" type="button" data-tour-play><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.5 13 8l-8.5 5.5z"/></svg>Watch</button>
+    <a class="btn btn-ghost nav-cta" href="#specs">Spec sheet</a>
+  </div>
+</header>
+
+<div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
+<aside class="rail mono" id="rail" aria-label="Chapters"></aside>
+
+<div class="hud mono" aria-hidden="true">
+  <div><span>Stage</span><b id="hudStage">00 · ASSEMBLED</b></div>
+  <div><span>Explode</span><b id="hudExplode">0%</b></div>
+  <div><span>E-shaft</span><b id="hudShaft">0000.0°</b></div>
+  <div><span>Rotor 1</span><b id="hudRotor">000.0°</b></div>
+</div>
+
+<main>
+  <section class="scene hero" id="top">
+    <div class="hero-inner">
+      <div class="eyebrow mono"><span>TRIAD R3</span>Triple-rotor powertrain · Concept</div>
+      <h1>Three rotors. <br>Zero pistons.</h1>
+      <p class="lede">A 1,962&nbsp;cc rotary engine with no valves, cams or connecting rods. It has four moving parts in its core and fires every 120° of shaft rotation. Scroll to take it apart.</p>
+      <div class="stats">
+        <div><b>1,962<small>cc</small></b><span class="mono">Displacement</span></div>
+        <div><b>120<small>°</small></b><span class="mono">Firing interval</span></div>
+        <div><b>9,000<small>rpm</small></b><span class="mono">Redline</span></div>
+        <div><b>4</b><span class="mono">Moving parts</span></div>
+      </div>
+    </div>
+    <div class="cue mono"><i></i>Scroll to disassemble <span class="cue-or">or</span> <button class="cue-play" type="button" data-tour-play><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.5 13 8l-8.5 5.5z"/></svg>Watch the tour</button></div>
+  </section>
+
+  <section class="scene chapter" id="teardown">
+    <div class="card">
+      <div class="eyebrow mono"><span>01</span>Ancillaries</div>
+      <h2>First, everything bolted to the outside.</h2>
+      <p>The intake plenum and its six runners lift away from the side ports. The 3-into-1 header comes off the exhaust ports, the six spark plugs back out of the hot side, and the sump and front pulley drop clear.</p>
+      <ul class="ticks mono">
+        <li><b>Intake manifold</b><span>6 runners</span></li>
+        <li><b>Exhaust header</b><span>3-into-1</span></li>
+        <li><b>Spark plugs</b><span>× 6</span></li>
+        <li><b>Sump · pulley · flywheel</b><span>3</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="scene chapter tall">
+    <div class="card">
+      <div class="eyebrow mono"><span>02</span>Unstack</div>
+      <h2>No block. No head. Just a stack.</h2>
+      <p>The R3 is built as a sandwich of eight slabs: a front cover, a front housing, three rotor housings, two intermediate housings and a rear housing, all clamped by ten tension bolts. Pull the bolts and the slabs slide apart along the shaft axis.</p>
+      <ul class="ticks mono">
+        <li><b>Housings</b><span>8</span></li>
+        <li><b>Tension bolts</b><span>10</span></li>
+        <li><b>Eccentric shaft</b><span>1</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="scene chapter xtall" id="cycle">
+    <div class="card">
+      <div class="eyebrow mono"><span>03</span>The cycle</div>
+      <h2>Four strokes. One continuous motion.</h2>
+      <p>Each flank of the rotor forms its own sealed chamber with the housing. Scrolling turns the shaft through 1,080°, which is one full turn of the rotor. Follow <b class="hl">Chamber A</b> through the cycle.</p>
+      <ol class="phases mono" id="phases"></ol>
+      <p class="phase-text" id="phaseText">&nbsp;</p>
+      <div class="readout mono" id="cycleReadout">SHAFT 0000° / 1080°</div>
+    </div>
+  </section>
+
+  <section class="scene chapter">
+    <div class="card">
+      <div class="eyebrow mono"><span>04</span>Teardown</div>
+      <h2>Only four parts actually move.</h2>
+      <p>The whole working core is three rotors and one eccentric shaft. Lift the rotors off their lobes, release the seals that ride the trochoid, and slide the stationary gears off their housings. Nothing else in the engine moves.</p>
+      <ul class="ticks mono">
+        <li><b>Rotors</b><span>3</span></li>
+        <li><b>Eccentric shaft</b><span>1</span></li>
+        <li><b>Gas seals</b><span>45</span></li>
+        <li><b>Stationary gears</b><span>3</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <div id="components"></div>
+
+  <section class="scene specs" id="specs">
+    <div class="specs-inner">
+      <div class="eyebrow mono"><span>06</span>Specification</div>
+      <h2>The numbers.</h2>
+      <div class="spec-grid">
+        <div><b>1,962<small>cc</small></b><span class="mono">Displacement, 3 × 654 cc</span></div>
+        <div><b>3<small>rotor</small></b><span class="mono">Wankel, side intake ports</span></div>
+        <div><b>105<small>mm</small></b><span class="mono">Generating radius</span></div>
+        <div><b>15<small>mm</small></b><span class="mono">Eccentricity</span></div>
+        <div><b>80<small>mm</small></b><span class="mono">Rotor housing width</span></div>
+        <div><b>9.7<small>:1</small></b><span class="mono">Compression ratio</span></div>
+        <div><b>290<small>kW</small></b><span class="mono">Peak power @ 8,500 rpm</span></div>
+        <div><b>390<small>N·m</small></b><span class="mono">Peak torque @ 6,500 rpm</span></div>
+        <div><b>120<small>°</small></b><span class="mono">Firing interval</span></div>
+        <div><b>9,000<small>rpm</small></b><span class="mono">Redline</span></div>
+        <div><b>168<small>kg</small></b><span class="mono">Dry mass</span></div>
+        <div><b>620<small>mm</small></b><span class="mono">Overall length</span></div>
+      </div>
+      <p class="fine mono">All figures are design targets for the TRIAD R3 concept powertrain.</p>
+    </div>
+  </section>
+
+  <section class="scene chapter xtall" id="installed" data-tour="0.62:13,0.88:5,0.88:12,0.97:3">
+    <div class="card">
+      <div class="eyebrow mono"><span>07</span>Installed</div>
+      <h2>Mounted low, behind the axle.</h2>
+      <p>At 620&nbsp;mm long, the R3 fits entirely behind the front axle line. That puts its mass inside the wheelbase, close to the middle of the car, and the shallow sump lets the shaft sit just 410&nbsp;mm off the ground.</p>
+      <ul class="ticks mono">
+        <li><b>Layout</b><span>Front-mid</span></li>
+        <li><b>Shaft height</b><span>410 mm</span></li>
+        <li><b>Engine length</b><span>620 mm</span></li>
+        <li><b>Weight split</b><span>50 : 50 target</span></li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer class="cta">
+  <div class="cta-inner">
+    <div class="eyebrow mono"><span>R3</span>Reassembled</div>
+    <h2>Built to spin.</h2>
+    <p>Every part you just saw turns in one direction, at one steady speed ratio, around one shaft.</p>
+    <div class="actions">
+      <a class="btn btn-solid" href="#top">Replay the teardown</a>
+      <a class="btn btn-ghost" href="#components">Explore components</a>
+    </div>
+  </div>
+  <div class="foot mono">
+    <span>© 2026 Triad Rotary · Concept showcase</span>
+    <span>Real-time WebGL model · generated from the engine geometry, no meshes loaded</span>
+  </div>
+</footer>
+
+<script type="module" src="js/main.js?v=1"></script>
+</body>
+</html>
