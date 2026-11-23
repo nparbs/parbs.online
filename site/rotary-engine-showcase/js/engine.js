@@ -4,6 +4,10 @@
 
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import {
+  castMetalTexture, brushedMetalTexture, radialMachinedTexture,
+  wrinkleCoatTexture, braidedHoseTexture,
+} from './textures.js';
 
 export const TAU = Math.PI * 2;
 export const R = 1.05;    // generating radius (105 mm)
@@ -127,8 +131,12 @@ const cylY = (rt, rb, h, seg = 32) => new THREE.CylinderGeometry(rt, rb, h, seg)
 function heatTint(geo) {
   const uv = geo.attributes.uv, n = uv.count, col = new Float32Array(n * 3);
   const stops = [
-    [0.0, [1.0, 0.8, 0.5]], [0.18, [0.92, 0.62, 0.42]], [0.38, [0.62, 0.44, 0.62]],
-    [0.58, [0.46, 0.52, 0.82]], [0.8, [0.72, 0.74, 0.8]], [1.0, [0.86, 0.86, 0.88]],
+    [0.0, [1.0, 0.78, 0.42]],   // hot straw-gold near exhaust port
+    [0.16, [0.95, 0.56, 0.28]], // deep bronze-amber
+    [0.34, [0.68, 0.34, 0.62]], // heat-cycled violet
+    [0.52, [0.34, 0.48, 0.88]], // titanium burnt blue
+    [0.74, [0.70, 0.74, 0.82]], // cooling steel
+    [1.0, [0.88, 0.87, 0.86]],  // raw stainless at collector
   ];
   for (let i = 0; i < n; i++) {
     const u = uv.getX(i);
@@ -145,14 +153,39 @@ export function plateTexture() {
   const c = document.createElement('canvas');
   c.width = 1024; c.height = 256;
   const g = c.getContext('2d');
-  g.fillStyle = '#101114'; g.fillRect(0, 0, 1024, 256);
+  // Brushed dark billet backing
+  const bg = g.createLinearGradient(0, 0, 1024, 256);
+  bg.addColorStop(0, '#14171c'); bg.addColorStop(0.5, '#0c0e12'); bg.addColorStop(1, '#181c22');
+  g.fillStyle = bg; g.fillRect(0, 0, 1024, 256);
+  for (let y = 0; y < 256; y += 2) {
+    g.fillStyle = y % 4 === 0 ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.08)';
+    g.fillRect(0, y, 1024, 1);
+  }
+  // Engraved double border + corner rivets
   g.strokeStyle = '#ff5b1f'; g.lineWidth = 6; g.strokeRect(16, 16, 992, 224);
-  g.fillStyle = '#ff5b1f'; g.textBaseline = 'middle';
-  g.font = '800 124px Archivo, "Arial Black", Arial, sans-serif';
-  g.fillText('TRIAD', 56, 134);
-  g.fillStyle = '#d9dce0';
-  g.font = '500 40px "JetBrains Mono", Consolas, monospace';
-  g.fillText('R3 · TRIPLE ROTOR', 520, 134);
+  g.strokeStyle = 'rgba(255,255,255,0.22)'; g.lineWidth = 2; g.strokeRect(28, 28, 968, 200);
+  for (const [rx, ry] of [[42, 42], [982, 42], [42, 214], [982, 214]]) {
+    g.fillStyle = '#8b929c'; g.beginPath(); g.arc(rx, ry, 8, 0, TAU); g.fill();
+    g.fillStyle = '#22262c'; g.beginPath(); g.arc(rx, ry, 4, 0, TAU); g.fill();
+  }
+  // Rotor emblem on left
+  g.save();
+  g.strokeStyle = '#ff5b1f'; g.lineWidth = 10; g.lineJoin = 'round';
+  g.beginPath();
+  g.moveTo(120, 66); g.quadraticCurveTo(175, 118, 178, 174);
+  g.quadraticCurveTo(120, 198, 62, 174); g.quadraticCurveTo(65, 118, 120, 66);
+  g.closePath(); g.stroke();
+  g.fillStyle = '#ff5b1f'; g.beginPath(); g.arc(120, 134, 14, 0, TAU); g.fill();
+  g.restore();
+
+  g.fillStyle = '#ffffff'; g.textBaseline = 'middle';
+  g.font = '800 112px Archivo, "Arial Black", Arial, sans-serif';
+  g.fillText('TRIAD', 206, 118);
+  g.fillStyle = '#ff5b1f';
+  g.fillText('R3', 558, 118);
+  g.fillStyle = '#b9c0ca';
+  g.font = '600 30px "JetBrains Mono", Consolas, monospace';
+  g.fillText('1,962CC · TRIPLE-ROTOR · 9,000 RPM', 210, 192);
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
   t.anisotropy = 8;
@@ -160,33 +193,43 @@ export function plateTexture() {
 }
 
 export function makeMaterials(plateTex) {
+  const castAluBump = castMetalTexture(101, 1.0, [4, 4]);
+  const castIronBump = castMetalTexture(207, 1.15, [5, 5]);
+  const brushedBump = brushedMetalTexture(309, [3, 3]);
+  const radialBump = radialMachinedTexture(411, false);
+  const wrinkleBump = wrinkleCoatTexture(517, [8, 8]);
+  const braidMap = braidedHoseTexture([22, 2]);
+
   const M = (color, metalness, roughness, extra = {}) => new THREE.MeshStandardMaterial({ color, metalness, roughness, ...extra });
   return {
-    alu: M(0xb9bec4, 1.0, 0.4),
-    aluPol: M(0xd4d8dc, 1.0, 0.2),
-    aluDark: M(0x6d737a, 1.0, 0.42),
-    iron: M(0x565b62, 0.9, 0.56),
-    face: M(0xb5b9be, 1.0, 0.2),
-    chrome: M(0xf0f3f6, 1.0, 0.07),
-    rotor: M(0x40444a, 0.95, 0.34),
-    steel: M(0xc8ccd1, 1.0, 0.17),
-    gear: M(0xa9adb2, 1.0, 0.26),
-    bronze: M(0xb8843f, 1.0, 0.3),
-    tin: M(0xd8b25a, 1.0, 0.26),
-    black: M(0x1a1b1e, 0.4, 0.62),
-    ceramic: M(0xf2f0ea, 0.0, 0.3),
-    accent: M(0xff5b1f, 0.25, 0.36, { emissive: 0x3a0d00 }),
-    exhaust: M(0xa49a90, 1.0, 0.32),
-    exhaustTint: M(0xe2dbd4, 1.0, 0.3, { vertexColors: true }),
-    bolt: M(0x8c9298, 1.0, 0.3),
-    port: M(0x08090a, 0.2, 0.8),
-    plate: M(0xffffff, 0.3, 0.5, { map: plateTex }),
-    rubber: M(0x141516, 0.0, 0.72),
-    oring: M(0x1f2a24, 0.0, 0.55),
-    gasket: M(0xb06a3c, 1.0, 0.38),
-    anodBlue: M(0x2b6fd8, 0.6, 0.3),
-    recess: M(0x24272b, 0.75, 0.6),
-    castAlu: M(0x9da2a8, 1.0, 0.55),
+    alu: M(0xbcc2c9, 0.96, 0.36, { bumpMap: castAluBump, bumpScale: 0.012, roughnessMap: castAluBump }),
+    aluPol: M(0xdce0e6, 1.0, 0.16, { bumpMap: brushedBump, bumpScale: 0.005 }),
+    aluDark: M(0x636972, 0.94, 0.4, { bumpMap: castAluBump, bumpScale: 0.014 }),
+    iron: M(0x4b5058, 0.88, 0.54, { bumpMap: castIronBump, bumpScale: 0.018, roughnessMap: castIronBump }),
+    face: M(0xc2c6cc, 1.0, 0.16, { bumpMap: radialBump, bumpScale: 0.004 }),
+    chrome: M(0xf2f5f8, 1.0, 0.06, { bumpMap: brushedBump, bumpScale: 0.002 }),
+    rotor: M(0x3a3e45, 0.94, 0.32, { bumpMap: castIronBump, bumpScale: 0.01 }),
+    steel: M(0xcfd3d9, 1.0, 0.15, { bumpMap: brushedBump, bumpScale: 0.004 }),
+    gear: M(0xa9adb3, 1.0, 0.24, { bumpMap: brushedBump, bumpScale: 0.006 }),
+    bronze: M(0xc48b42, 1.0, 0.26, { bumpMap: brushedBump, bumpScale: 0.004 }),
+    tin: M(0xe0b95e, 1.0, 0.22),
+    black: M(0x16181c, 0.32, 0.66, { bumpMap: wrinkleBump, bumpScale: 0.016 }),
+    ceramic: M(0xf4f2ec, 0.0, 0.26),
+    accent: M(0xff5b1f, 0.35, 0.3, { emissive: 0x330a00 }),
+    exhaust: M(0xa89e94, 1.0, 0.28, { bumpMap: brushedBump, bumpScale: 0.006 }),
+    exhaustTint: M(0xe6dfd8, 1.0, 0.25, { vertexColors: true, bumpMap: brushedBump, bumpScale: 0.005 }),
+    bolt: M(0x90969e, 1.0, 0.26),
+    port: M(0x070809, 0.15, 0.86),
+    plate: M(0xffffff, 0.45, 0.38, { map: plateTex }),
+    rubber: M(0x131416, 0.0, 0.78),
+    oring: M(0x1c2b22, 0.0, 0.52),
+    gasket: M(0x6e4326, 0.85, 0.44),
+    anodBlue: M(0x2268d6, 0.78, 0.24),
+    anodRed: M(0xc81e28, 0.78, 0.24),
+    braided: M(0xd8dde4, 0.92, 0.34, { map: braidMap, bumpMap: braidMap, bumpScale: 0.015 }),
+    silicone: M(0x19386b, 0.08, 0.42),
+    recess: M(0x1c1e22, 0.65, 0.68, { bumpMap: castIronBump, bumpScale: 0.012 }),
+    castAlu: M(0xa0a6ae, 0.95, 0.48, { bumpMap: castAluBump, bumpScale: 0.016, roughnessMap: castAluBump }),
   };
 }
 
@@ -258,10 +301,22 @@ export function buildEngine(M) {
   const oringInner = trochoidRing(0.05, 0.064, 0.006);
   const oringOuter = trochoidRing(0.145, 0.157, 0.006);
   const outletGeo = cylY(0.11, 0.13, 0.2, 24);
+  const finGeo = new RoundedBoxGeometry(0.055, 0.032, W - 0.14, 1, 0.008);
   RH.forEach(i => {
     const g = stack[i].group;
     add(rhGeo, M.alu, g);
     add(linerGeo, M.chrome, g);
+    // Iconic external rotary cooling/stiffening ribs around the housing waist
+    for (let fI = 0; fI < 30; fI++) {
+      const t = (fI / 30) * TAU;
+      // Skip areas occupied by spark plug bosses, exhaust flange, and top coolant boss
+      if (Math.abs(t) < 0.22 || Math.abs(t - TAU) < 0.22) continue;
+      if (Math.abs(t - Math.PI / 2) < 0.42) continue;
+      const dtExh = Math.atan2(Math.sin(t - EXH_T), Math.cos(t - EXH_T));
+      if (Math.abs(dtExh) < 0.36) continue;
+      const n = epiN(t), p = epiOff(t, OUT + 0.015);
+      add(finGeo, M.castAlu, g, p.x, p.y, 0).rotation.z = Math.atan2(n.y, n.x);
+    }
     for (const f of [1, -1]) {
       add(oringInner, M.oring, g, 0, 0, f * (W / 2 + 0.002));
       add(oringOuter, M.oring, g, 0, 0, f * (W / 2 + 0.002));
@@ -296,11 +351,25 @@ export function buildEngine(M) {
       add(extrude(ring(200, t => epiOff(t, 0.1)), [circ(0, 0, 0.16, 40)], it.th, 0.02, 2), M.aluDark, g);
       add(cylZ(0.24, 0.24, 0.12, 40), M.aluDark, g, -0.62, 0, it.th / 2 + 0.06);
       add(cylZ(0.1, 0.1, 0.05, 6), M.bolt, g, -0.62, 0, it.th / 2 + 0.145);
+      // Water pump thermostat neck on top-front of front cover (math +x = world up)
+      alignY(add(cylY(0.11, 0.13, 0.34, 24), M.castAlu, g, 0.72, 0.25, it.th / 2 + 0.02), v3(0.6, 0.25, 0.75));
+      alignY(add(cylY(0.14, 0.14, 0.04, 24), M.aluPol, g, 0.84, 0.3, it.th / 2 + 0.17), v3(0.6, 0.25, 0.75));
       return;
     }
     if (it.type === 'rh') return;
     const isIH = it.type === 'ih';
     add(plateGeo(it.th, isIH), M.iron, g);
+    // Oil filter pedestal & spin-on race oil filter on the rear housing (math +x = world up, +y = world -x)
+    if (it.type === 'rr') {
+      add(new RoundedBoxGeometry(0.45, 0.42, 0.38, 2, 0.04), M.castAlu, g, 1.38, 0.36, 0);
+      alignY(add(cylY(0.24, 0.24, 0.56, 32), M.anodRed, g, 1.72, 0.56, 0), v3(0.82, 0.56, 0));
+      alignY(add(cylY(0.25, 0.25, 0.05, 16), M.black, g, 1.97, 0.73, 0), v3(0.82, 0.56, 0));
+    }
+    // Billet oil filler neck + knurled cap on the front intermediate housing
+    if (it.type === 'fh') {
+      alignY(add(cylY(0.12, 0.14, 0.42, 24), M.castAlu, g, 1.38, 0.42, 0), v3(0.85, 0.52, 0));
+      alignY(add(cylY(0.16, 0.16, 0.09, 12), M.anodRed, g, 1.58, 0.55, 0), v3(0.85, 0.52, 0));
+    }
     const fg = isIH ? faceGeoPorts : faceGeo;
     if (it.type !== 'fh') add(fg, M.face, g, 0, 0, it.th / 2 + 0.002);
     if (it.type !== 'rr') add(fg, M.face, g, 0, 0, -it.th / 2 - 0.002);
@@ -482,8 +551,9 @@ export function buildEngine(M) {
     thread: cylY(0.048, 0.048, 0.16, 20), washer: cylY(0.07, 0.07, 0.012, 24), hex: cylY(0.08, 0.08, 0.1, 6),
     shell: cylY(0.06, 0.07, 0.04, 24), ins: cylY(0.036, 0.046, 0.26, 24), rib: cylY(0.045, 0.045, 0.014, 24),
     term: cylY(0.018, 0.018, 0.07, 12), cap: cylY(0.027, 0.027, 0.03, 12),
+    boot: cylY(0.068, 0.058, 0.16, 20), bootCollar: cylY(0.042, 0.052, 0.06, 16),
   };
-  const plugs = RH.map(hi => PLUG_T.map(t => {
+  const plugs = RH.map(hi => PLUG_T.map((t, pi) => {
     const n = epiN(t), p = epiOff(t, OUT + 0.15);
     const g = new THREE.Group();
     g.position.set(p.x, p.y, stack[hi].z0);
@@ -497,6 +567,9 @@ export function buildEngine(M) {
     for (let i = 0; i < 4; i++) add(pg.rib, M.ceramic, g, 0, 0.21 + i * 0.045, 0);
     add(pg.term, M.steel, g, 0, 0.445, 0);
     add(pg.cap, M.steel, g, 0, 0.49, 0);
+    // Silicone ignition boot cap (leading = red/orange, trailing = blue)
+    add(pg.boot, pi === 0 ? M.anodRed : M.silicone, g, 0, 0.56, 0);
+    add(pg.bootCollar, M.rubber, g, 0, 0.66, 0);
     g.userData.base = g.position.clone();
     g.userData.dir = v3(n.x, n.y, 0);
     return g;
@@ -574,7 +647,7 @@ export function buildEngine(M) {
         add(tube, M.aluPol, intake, 0, 0, z);
         ringAt(intake, boss, M.castAlu, bP.clone().add(o), bT);
         // silicone coupler with two hose clamps
-        ringAt(intake, sleeve, M.rubber, cP.clone().add(o), cT);
+        ringAt(intake, sleeve, M.silicone, cP.clone().add(o), cT);
         [-0.07, 0.07].forEach(d => ringAt(intake, clamp, M.steel, cP.clone().add(o).addScaledVector(cT, d), cT));
         ringAt(intake, bead, M.aluPol, eP.clone().add(o), eT);
         // injector
@@ -591,15 +664,20 @@ export function buildEngine(M) {
         fastener(intake, q, N, false);
       });
     });
-    // fuel rail with brackets, AN fittings, pressure regulator and feed line
-    add(new RoundedBoxGeometry(0.09, 0.09, 4.0, 2, 0.02), M.accent, intake, 1.72, 1.66, 0);
+    // fuel rail with brackets, AN fittings, pressure regulator, gauge and braided lines
+    add(new RoundedBoxGeometry(0.09, 0.09, 4.0, 2, 0.02), M.anodRed, intake, 1.72, 1.66, 0);
     [-1.5, 0, 1.5].forEach(z => add(new THREE.BoxGeometry(0.2, 0.025, 0.06), M.steel, intake, 1.82, 1.7, z));
     add(cylZ(0.05, 0.05, 0.07, 6), M.anodBlue, intake, 1.72, 1.66, 2.04);
-    add(cylZ(0.035, 0.035, 0.08, 12), M.accent, intake, 1.72, 1.66, 2.11);
+    add(cylZ(0.038, 0.038, 0.08, 12), M.anodRed, intake, 1.72, 1.66, 2.11);
     add(cylZ(0.065, 0.065, 0.16, 20), M.aluPol, intake, 1.72, 1.66, -2.08);
     add(cylZ(0.05, 0.05, 0.06, 6), M.anodBlue, intake, 1.72, 1.66, -2.19);
+    // Mini fuel pressure gauge on the regulator
+    add(cylY(0.06, 0.06, 0.04, 24), M.steel, intake, 1.72, 1.76, -2.08);
+    add(cylY(0.05, 0.05, 0.044, 24), M.ceramic, intake, 1.72, 1.762, -2.08);
     const feed = new THREE.CatmullRomCurve3([v3(1.72, 1.66, 2.15), v3(1.72, 1.7, 2.45), v3(1.6, 1.45, 2.7), v3(1.45, 1.1, 2.75)]);
-    add(new THREE.TubeGeometry(feed, 24, 0.024, 8), M.rubber, intake);
+    add(new THREE.TubeGeometry(feed, 28, 0.028, 10), M.braided, intake);
+    const ret = new THREE.CatmullRomCurve3([v3(1.72, 1.66, -2.22), v3(1.72, 1.68, -2.48), v3(1.56, 1.4, -2.65), v3(1.4, 1.05, -2.68)]);
+    add(new THREE.TubeGeometry(ret, 24, 0.024, 10), M.braided, intake);
   }
 
   // ---- exhaust header (3-into-1, flanged, with probes, flex section and V-band outlet)

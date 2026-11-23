@@ -255,8 +255,8 @@ p { color: #c3c8ce; }
 
 /* ---------------------------------------------------------------- gauge cluster (installed section) */
 .cluster {
-  position: fixed; right: var(--gutter); bottom: 22px; z-index: 16; width: 400px;
-  padding: 12px 14px 12px; background: rgba(8, 9, 12, 0.72); border: 1px solid var(--line); border-radius: 6px;
+  position: fixed; right: var(--gutter); bottom: 22px; z-index: 16; width: min(490px, calc(100vw - 32px));
+  padding: 14px 16px 14px; background: rgba(8, 9, 12, 0.76); border: 1px solid var(--line); border-radius: 6px;
   backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
   opacity: 0; transform: translateY(16px); pointer-events: none; transition: opacity 0.5s ease, transform 0.5s ease;
 }
@@ -307,11 +307,11 @@ body.cluster-on .hud { opacity: 0; }
     background: linear-gradient(180deg, rgba(11, 13, 17, 0.9), rgba(8, 9, 12, 0.97) 40%);
     transform: translateY(12px);
   }
-  .cluster .gauges { max-width: 420px; margin: 0 auto; }
-  .cluster .ctl, .cluster .paints { max-width: 420px; margin-left: auto; margin-right: auto; }
+  .cluster .gauges { max-width: 480px; margin: 0 auto; }
+  .cluster .ctl, .cluster .paints { max-width: 480px; margin-left: auto; margin-right: auto; }
   body.cluster-on .scene .card { opacity: 0; visibility: hidden; transform: translateY(12px); pointer-events: none; }
   body.cluster-on .cta { padding-bottom: 340px; }
-  .cluster .gauges { max-height: 26svh; }
+  .cluster .gauges { max-height: 30svh; }
   .cluster .ctl button { height: 32px; font-size: 9.5px; }
   .cluster .paints { margin-top: 6px; }
 }

@@ -55,7 +55,7 @@ function tachSVG() {
       <circle cx="${gx}" cy="140" r="5" class="hub"/>
     </g>`;
   };
-  return `<svg viewBox="-40 0 400 230" class="gauges" aria-hidden="true">
+  return `<svg viewBox="-64 0 448 230" class="gauges" aria-hidden="true">
     ${small(-6, 'OIL', '0', '10', 'nOil', 'kg/cm²')}
     ${small(326, 'WATER', 'C', 'H', 'nWater', '')}
     <circle cx="${cx}" cy="${cy}" r="${R + 8}" class="bezel"/>
