@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>STRATA T64 · Ball-bearing turbocharger</title>
+<meta name="description" content="An interactive teardown of the STRATA T64 ball-bearing turbocharger. Scroll to take it apart, see what every part does, then watch it make boost.">
+<meta name="theme-color" content="#0a0c0f">
+<meta property="og:title" content="STRATA T64 · Ball-bearing turbocharger">
+<meta property="og:description" content="Scroll to take a turbocharger apart, piece by piece, then watch it make boost.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0c0f'/%3E%3Cpath d='M16 6a10 10 0 1 1-9.6 7.2' fill='none' stroke='%231fb3ff' stroke-width='2.6' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23ff5b1f'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=3">
+<link rel="stylesheet" href="tour.css?v=3">
+<link rel="stylesheet" href="reveal.css?v=3">
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="shade" aria-hidden="true"></div>
+<div id="callouts" aria-hidden="true"></div>
+
+<div id="loader">
+  <div class="loader-inner">
+    <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 5a11 11 0 1 1-10.6 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="16" cy="16" r="3" fill="currentColor"/></svg>
+    <div class="loader-word">STRATA <b>T64</b></div>
+    <div class="loader-bar"><i></i></div>
+    <div class="loader-note mono">Balancing the rotating assembly</div>
+  </div>
+</div>
+
+<header class="nav">
+  <a class="brand" href="#top" aria-label="STRATA T64, back to top">
+    <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 5a11 11 0 1 1-10.6 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="16" cy="16" r="3" fill="var(--hot)"/></svg>
+    <span>STRATA</span><em>T64</em>
+  </a>
+  <nav class="links mono" aria-label="Sections">
+    <a href="#teardown">Teardown</a>
+    <a href="#components">Components</a>
+    <a href="#how">How it works</a>
+    <a href="#specs">Specification</a>
+  </nav>
+  <div class="nav-actions">
+    <button class="btn btn-ghost nav-play" type="button" data-tour-play><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.5 13 8l-8.5 5.5z"/></svg>Watch</button>
+    <a class="btn btn-ghost nav-cta" href="#how">See it spool</a>
+  </div>
+</header>
+
+<div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
+<aside class="rail mono" id="rail" aria-label="Chapters"></aside>
+
+<div class="hud mono" aria-hidden="true">
+  <div><span>Stage</span><b id="hudStage">00 · ASSEMBLED</b></div>
+  <div><span>Explode</span><b id="hudExplode">0%</b></div>
+  <div><span>Shaft</span><b id="hudShaft">0 rpm</b></div>
+</div>
+
+<main>
+  <section class="scene hero" id="top">
+    <div class="hero-inner rv">
+      <div class="eyebrow mono" id="heroEyebrow"></div>
+      <h1 id="heroTitle"></h1>
+      <p class="lede" id="heroLede"></p>
+      <div class="stats" id="heroStats"></div>
+    </div>
+    <div class="cue mono"><i></i>Scroll to take it apart <span class="cue-or">or</span> <button class="cue-play" type="button" data-tour-play><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.5 13 8l-8.5 5.5z"/></svg>Watch the tour</button></div>
+  </section>
+
+  <section class="scene chapter" id="teardown">
+    <div class="card"><div class="eyebrow mono" data-k="TEARDOWN.eyebrow"></div><h2 data-k="TEARDOWN.title"></h2><p data-k="TEARDOWN.body"></p></div>
+  </section>
+
+  <section class="scene chapter tall" id="overview">
+    <div class="card card-sm"><div class="eyebrow mono" data-k="OVERVIEW.eyebrow"></div><h2 data-k="OVERVIEW.title"></h2><p data-k="OVERVIEW.body"></p></div>
+  </section>
+
+  <div id="components"></div>
+
+  <section class="scene chapter how" id="how" data-tour="0.2:3,0.265:2,0.265:4,0.395:2,0.395:4,0.525:2,0.525:4,0.655:2,0.655:4,0.785:2,0.785:7,1:3">
+    <div class="card how-card">
+      <div class="eyebrow mono" data-k="HOW.eyebrow"></div>
+      <h2 data-k="HOW.title"></h2>
+      <p data-k="HOW.body"></p>
+      <ol class="steps" id="steps"></ol>
+    </div>
+    <div class="dash" id="dash">
+      <div class="gauge" id="gauge"></div>
+      <div class="dash-ctl">
+        <button class="btn btn-solid floor" id="floor" type="button"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 13 8 3l5 10z"/></svg>Hold to floor it</button>
+        <div class="dash-row">
+          <button class="btn btn-ghost btn-sm" id="sound" type="button" aria-pressed="false">Sound</button>
+          <span class="slowmo mono">Shown 1/1000 speed</span>
+        </div>
+        <div class="legend mono"><span class="lg-air">Intake air</span><span class="lg-exh">Exhaust</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scene specs" id="specs">
+    <div class="specs-inner">
+      <div class="eyebrow mono"><span>11</span>Specification</div>
+      <h2>STRATA T64</h2>
+      <dl class="spec-table" id="specTable"></dl>
+      <p class="fine mono" id="foot"></p>
+    </div>
+  </section>
+</main>
+
+<footer class="cta">
+  <div class="cta-inner">
+    <h2>Built to<br>spool.</h2>
+    <p>Scroll back up to take it apart again, or jump straight to the part you want.</p>
+    <div class="actions"><a class="btn btn-solid" href="#top">Back to the top</a><a class="btn btn-ghost" href="#components">Components</a><a class="btn btn-ghost" href="#how">How it works</a></div>
+  </div>
+  <div class="foot mono"><span>STRATA T64 · a fictional turbocharger</span><span>Interactive teardown · Three.js</span></div>
+</footer>
+
+<script type="module" src="js/main.js?v=3"></script>
+<script type="module" src="js/reveal.js?v=3"></script>
+</body>
+</html>

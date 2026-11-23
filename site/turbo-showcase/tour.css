@@ -1,0 +1,52 @@
+/* ---------------------------------------------------------------- video mode (autoscroll tour) */
+html.touring { scroll-behavior: auto; }
+.nav-play, .cue-play { cursor: pointer; background: none; }
+.nav-play svg, .cue-play svg { width: 11px; height: 11px; fill: var(--accent); }
+.nav-play:hover svg { fill: currentColor; }
+.cue-or { color: var(--dim); }
+.cue-play {
+  display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line-2); border-radius: 2px; padding: 8px 12px;
+  color: var(--ink); font: inherit; letter-spacing: inherit; text-transform: inherit; pointer-events: auto;
+}
+.cue-play:hover { border-color: var(--accent); color: var(--accent); }
+html.touring .cue { opacity: 0; pointer-events: none; }
+
+.tourbar {
+  position: fixed; left: 50%; bottom: 22px; z-index: 40; width: min(560px, calc(100vw - 32px));
+  display: flex; align-items: center; gap: 10px; padding: 8px 10px;
+  background: rgba(8, 9, 12, 0.78); border: 1px solid var(--line-2); border-radius: 6px;
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  opacity: 0; transform: translate(-50%, 16px); pointer-events: none; transition: opacity 0.35s, transform 0.35s;
+}
+.tourbar.show { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+.tourbar button {
+  flex: none; display: grid; place-items: center; height: 34px; min-width: 34px; padding: 0 8px; cursor: pointer;
+  background: rgba(255, 255, 255, 0.04); border: 1px solid var(--line-2); border-radius: 3px; color: var(--ink);
+  font: 500 11px/1 var(--mono); letter-spacing: 0.08em;
+}
+.tourbar button:hover { border-color: var(--accent); color: var(--accent); }
+.tourbar svg { width: 13px; height: 13px; fill: currentColor; stroke: currentColor; stroke-width: 0; }
+.tourbar .tb-exit svg { fill: none; stroke-width: 1.8; stroke-linecap: round; }
+.tourbar .tb-play { background: var(--accent); border-color: var(--accent); color: #0b0b0b; }
+.tourbar .tb-play:hover { background: #ff7a45; color: #0b0b0b; }
+.tourbar .i-play { display: none; }
+.tourbar.paused .i-play { display: block; }
+.tourbar.paused .i-pause { display: none; }
+.tb-mid { flex: 1; min-width: 0; display: grid; gap: 7px; }
+.tb-label { display: flex; justify-content: space-between; gap: 8px; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mute); }
+.tb-ch { color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tb-time { font-variant-numeric: tabular-nums; }
+.tb-track { position: relative; height: 4px; background: var(--line-2); border-radius: 2px; cursor: pointer; touch-action: none; }
+.tb-track::before { content: ''; position: absolute; inset: -8px 0; }
+.tb-fill { position: absolute; inset: 0; background: var(--accent); border-radius: 2px; transform-origin: 0 50%; transform: scaleX(0); }
+.tb-track b { position: absolute; top: -3px; width: 2px; height: 10px; margin-left: -1px; background: rgba(255, 255, 255, 0.45); pointer-events: none; }
+@media (max-width: 820px) {
+  .nav-play { height: 36px; padding: 0 12px; font-size: 10.5px; }
+  .nav-cta { display: none; }
+  .tourbar { bottom: 12px; gap: 8px; padding: 6px 8px; }
+  .tourbar button { height: 32px; min-width: 32px; padding: 0 6px; }
+  .cue-or { display: none; }
+  /* keep the docked cards above the bar */
+  html.touring .card, html.touring .card-sm, html.touring .how-card { bottom: 76px; }
+  html.touring .scene > .card { top: calc(100svh - var(--cardH, 300px) - 76px); }
+}
