@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { TAU, V3, lathe, merge, mesh, hex } from '../geo.js';
+import { TAU, V3, lathe, merge, mesh, hex } from '../geo.js?v=4';
 
 export function buildChra(M) {
   const group = new THREE.Group();

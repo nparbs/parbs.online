@@ -84,11 +84,12 @@ export class Tour {
       <button class="tb-play" type="button" aria-label="Pause"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="i-pause" d="M4 3h3v10H4zM9 3h3v10H9z"/><path class="i-play" d="M4.5 2.5 13 8l-8.5 5.5z"/></svg></button>
       <div class="tb-mid">
         <div class="tb-label"><span class="tb-ch">Overview</span><span class="tb-time">0:00</span></div>
-        <div class="tb-track"><i class="tb-fill"></i>${this.chapters.map(([n, s]) => `<b style="left:${((this.tAt(s) / this.T) * 100).toFixed(2)}%" title="${n}"></b>`).join('')}</div>
+        <div class="tb-track" role="slider" tabindex="0" aria-label="Tour progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i class="tb-fill"></i>${this.chapters.map(([n, s]) => `<b style="left:${((this.tAt(s) / this.T) * 100).toFixed(2)}%" title="${n}"></b>`).join('')}</div>
       </div>
       <button class="tb-speed" type="button" title="Playback speed">${SPEEDS[0][0]}</button>
       <button class="tb-exit" type="button" aria-label="Exit tour"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>`;
     document.body.appendChild(bar);
+    bar.inert = true;   // hidden until a tour starts: keep its buttons out of the tab order
     this.bar = bar;
     this.el = { play: bar.querySelector('.tb-play'), ch: bar.querySelector('.tb-ch'), time: bar.querySelector('.tb-time'), fill: bar.querySelector('.tb-fill'), speed: bar.querySelector('.tb-speed'), track: bar.querySelector('.tb-track') };
     this.el.play.addEventListener('click', () => (this.playing ? this.pause() : this.play()));
@@ -99,13 +100,17 @@ export class Tour {
       this.el.speed.textContent = SPEEDS[this.speedIdx][0];
     });
     // click / drag on the track to seek
-    const seek = e => {
-      const r = this.el.track.getBoundingClientRect();
-      this.t = clamp((e.clientX - r.left) / r.width) * this.T;
-      this.resetCues();
-    };
+    // seeking also moves the page while paused (pendingSeek), and arrow keys seek ±5 s
+    this.pendingSeek = false;
+    const seekTo = t => { this.t = clamp(t, 0, this.T); this.resetCues(); this.pendingSeek = true; };
+    const seek = e => { const r = this.el.track.getBoundingClientRect(); seekTo(clamp((e.clientX - r.left) / r.width) * this.T); };
     this.el.track.addEventListener('pointerdown', e => { seek(e); this.el.track.setPointerCapture(e.pointerId); this.el.track.onpointermove = seek; });
-    this.el.track.addEventListener('pointerup', () => { this.el.track.onpointermove = null; });
+    ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(ev => this.el.track.addEventListener(ev, () => { this.el.track.onpointermove = null; }));
+    this.el.track.addEventListener('keydown', e => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      e.preventDefault(); e.stopPropagation();
+      seekTo((this.playing ? this.t : this.tAt(this.getS())) + (e.key === 'ArrowRight' ? 5 : -5));
+    });
 
     // user input pauses (but not input on the bar or the dash)
     const own = e => e.target.closest && e.target.closest('.tourbar, .dash');
@@ -130,6 +135,7 @@ export class Tour {
     this.active = true;
     document.documentElement.classList.add('touring');
     this.bar.classList.add('show');
+    this.bar.inert = false;
     const s = this.getS();
     this.t = s > this.K[this.K.length - 1].s - 0.05 ? 0 : this.tAt(s);   // replay from the top if at the end
     this.resetCues();
@@ -137,7 +143,10 @@ export class Tour {
   }
   play() {
     if (!this.active) return this.start();
-    if (this.t >= this.T) this.t = 0, this.resetCues();
+    // resume from wherever the page is now (the user may have scrolled while paused)
+    const s = this.getS();
+    this.t = this.t >= this.T || s > this.K[this.K.length - 1].s - 0.05 ? 0 : this.tAt(s);
+    this.resetCues();
     this.playing = true;
     this.bar.classList.remove('paused');
     this.el.play.setAttribute('aria-label', 'Pause');
@@ -159,6 +168,7 @@ export class Tour {
     this.onPause?.();
     document.documentElement.classList.remove('touring');
     this.bar.classList.remove('show', 'paused');
+    this.bar.inert = true;
   }
 
   // returns the s to scroll to, or null when not driving the page
@@ -172,15 +182,19 @@ export class Tour {
         if (c.dur) this.open.set(c, this.t + c.dur);
       }
       for (const [c, end] of this.open) if (this.t >= end) { c.end?.(); this.open.delete(c); }
-      if (this.t >= this.T) { this.playing = false; this.endCues(); this.bar.classList.add('paused', 'ended'); this.onEnd?.(); }
+      if (this.t >= this.T) { this.playing = false; this.endCues(); this.bar.classList.add('paused', 'ended'); this.el.play.setAttribute('aria-label', 'Play'); this.onEnd?.(); }
       else this.bar.classList.remove('ended');
     }
+    const seeked = this.pendingSeek;
+    this.pendingSeek = false;
+    if (seeked && !this.playing) { this.renderAt(this.t); return this.sAt(this.t); }
     this.render();
     return this.playing ? this.sAt(this.t) : null;
   }
 
-  render() {
-    const t = this.playing ? this.t : this.tAt(this.getS());
+  render() { this.renderAt(this.playing ? this.t : this.tAt(this.getS())); }
+  renderAt(t) {
+    this.el.track.setAttribute('aria-valuenow', String(Math.round((t / this.T) * 100)));
     this.el.fill.style.transform = `scaleX(${(t / this.T).toFixed(4)})`;
     const s = this.sAt(t);
     let ch = this.chapters[0][0];

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { V3, lathe, rod, rodBetween, merge, mesh, sweep, TAU } from '../geo.js';
+import { V3, lathe, rod, rodBetween, merge, mesh, sweep, TAU } from '../geo.js?v=4';
 
 export function buildActuator(M) {
   const group = new THREE.Group();

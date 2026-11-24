@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { V3, mesh, rod, TAU } from '../geo.js';
+import { V3, mesh, rod, TAU } from '../geo.js?v=4';
 
 export function buildEngine(M) {
   const group = new THREE.Group();

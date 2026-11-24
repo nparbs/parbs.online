@@ -2,8 +2,8 @@
 // glass plumbing between the turbo and a see-through engine, and an optional whistle / blow-off sound.
 
 import * as THREE from 'three';
-import { volute, sweep, lathe, V3, TAU } from './geo.js';
-import { buildEngine } from './parts/engine.js';
+import { volute, sweep, lathe, V3, TAU } from './geo.js?v=4';
+import { buildEngine } from './parts/engine.js?v=4';
 
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -359,7 +359,14 @@ export function buildFlow(M) {
 
 // ---------------------------------------------------------------- sound (off until the visitor turns it on)
 export class TurboAudio {
-  constructor() { this.on = false; this.ctx = null; }
+  constructor() {
+    this.on = false; this.ctx = null;
+    // silence background tabs: rAF stops there, so the drone would hang on one note
+    document.addEventListener('visibilitychange', () => {
+      if (!this.ctx || !this.on) return;
+      if (document.hidden) this.ctx.suspend(); else this.ctx.resume();
+    });
+  }
   start() {
     if (!this.ctx) {
       const ctx = this.ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -403,7 +410,7 @@ export class TurboAudio {
     this.rg.gain.setTargetAtTime(vis * (0.08 + 0.25 * sim.throttle), t, 0.1);
   }
   bov(psi) {
-    if (!this.ctx || !this.on) return;
+    if (!this.ctx || !this.on || this.ctx.state !== 'running') return;
     const ctx = this.ctx, t = ctx.currentTime;
     const s = ctx.createBufferSource(); s.buffer = this.noiseBuf;
     const hp = ctx.createBiquadFilter(); hp.type = 'bandpass'; hp.frequency.value = 3200; hp.Q.value = 0.6;

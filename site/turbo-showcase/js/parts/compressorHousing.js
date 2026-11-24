@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { TAU, V3, lathe, volute, hex, mesh, merge } from '../geo.js';
+import { TAU, V3, lathe, volute, hex, mesh, merge } from '../geo.js?v=4';
 
 export function buildCompressorHousing(M) {
   const group = new THREE.Group();
