@@ -1,12 +1,12 @@
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-import { makeMaterials } from './materials.js';
-import { buildTurbo } from './turbo.js';
-import { buildFlow, TurboSim, TurboAudio, ENGINE_POS } from './flow.js';
-import { Callouts } from './callouts.js';
-import { BoostGauge } from './gauge.js';
-import { Tour } from './tour.js';
-import { HERO, TEARDOWN, OVERVIEW, OVERVIEW_CALLOUTS, PARTS, HOW, SPECS, FOOT } from './content.js';
+import { makeMaterials } from './materials.js?v=4';
+import { buildTurbo } from './turbo.js?v=4';
+import { buildFlow, TurboSim, TurboAudio, ENGINE_POS } from './flow.js?v=4';
+import { Callouts } from './callouts.js?v=4';
+import { BoostGauge } from './gauge.js?v=4';
+import { Tour } from './tour.js?v=4';
+import { HERO, TEARDOWN, OVERVIEW, OVERVIEW_CALLOUTS, PARTS, HOW, SPECS, FOOT } from './content.js?v=4';
 
 const $ = (q, el = document) => el.querySelector(q);
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
@@ -66,7 +66,7 @@ const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true,
 renderer.setPixelRatio(Math.min(devicePixelRatio, innerWidth < 820 ? 1.75 : 2));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.05;
+renderer.toneMappingExposure = 1.2;
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.setClearColor(0x000000, 0);
@@ -91,7 +91,10 @@ scene.add(rimLight);
 const fillLight = new THREE.DirectionalLight(0xffe2cc, 0.45);
 fillLight.position.set(-8, -4, 12);
 scene.add(fillLight);
-scene.add(new THREE.HemisphereLight(0xcfd8e3, 0x0b0c0e, 0.3));
+scene.add(new THREE.HemisphereLight(0xcfd8e3, 0x1a1d22, 0.55));
+// soft light from just above the camera so whatever faces the viewer never drops to black
+const camLight = new THREE.DirectionalLight(0xffffff, 0.9);
+scene.add(camLight, camLight.target);
 // glow from the hot side when the turbo is working
 const heatLight = new THREE.PointLight(0xff6a2a, 0, 16, 2);
 heatLight.position.set(4, 1, -4);
@@ -222,7 +225,7 @@ function pose(i, f) {
       const b = HOW_VIEWS[Math.min(4, st + 1)];
       const w = st < 4 ? ease(ss(0.78, 1, g)) : 0;
       P.tgt = a.tgt.clone().lerp(b.tgt, w); P.dir = a.dir.clone().normalize().lerp(b.dir.clone().normalize(), w).normalize();
-      P.dist = lerp(a.dist, b.dist, w); P.shift = 0.12;
+      P.dist = lerp(a.dist, b.dist, w) * 1.18; P.shift = 0.1;   // a little wider so the gauge panel doesn't cover the turbo
     }
   } else if (i >= SPEC_I) {
     const az = -0.5 + (REDUCED ? 0 : time * 0.05);
@@ -235,7 +238,7 @@ function fadesFor(i) {
   for (const k of Object.keys(turbo.parts)) out[k] = 1;
   if (i >= 3 && i < HOW_I) {
     const F = FOCUS[PARTS[i - 3]?.key];
-    if (F) for (const k of Object.keys(out)) out[k] = F.parts.includes(k) ? 1 : (F.also?.[k] ?? 0.06);
+    if (F) for (const k of Object.keys(out)) out[k] = F.parts.includes(k) ? 1 : (F.also?.[k] ?? 0.035);
   }
   return out;
 }
@@ -269,6 +272,7 @@ const STAGE_NAMES = ['ASSEMBLED', 'TEARDOWN', 'EXPLODED', ...PARTS.map(p => p.na
 
 rail.addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
+  tour.pause();
   scrollTo({ top: yAt(+b.dataset.s + (+b.dataset.s === HOW_I ? 0.22 : 0.08)), behavior: REDUCED ? 'auto' : 'smooth' });
 });
 addEventListener('pointermove', e => { mouse.tx = e.clientX / innerWidth - 0.5; mouse.ty = e.clientY / innerHeight - 0.5; });
@@ -292,6 +296,7 @@ floorBtn.addEventListener('keydown', e => { if ((e.code === 'Enter' || e.code ==
 // links to #how land on the running animation, not the empty top of the section
 document.querySelectorAll('a[href="#how"]').forEach(a => a.addEventListener('click', e => {
   e.preventDefault();
+  tour.pause();
   scrollTo({ top: yAt(HOW_I + 0.24), behavior: REDUCED ? 'auto' : 'smooth' });
 }));
 const soundBtn = $('#sound');
@@ -325,7 +330,15 @@ const tour = new Tour({
   // step 5 (wastegate): floor it ~3.5 s, then lift so the wastegate opens and the blow-off valve fires
   cues: [{ s: HOW_I + STEP0 + 4 * STEPW + 0.05, dur: 3.5, fn: () => { tourHold = true; }, end: () => { tourHold = false; hold(false); } }],
 });
+document.querySelectorAll('a[href^="#"]').forEach(l => l.addEventListener('click', () => tour.pause()));
 document.querySelectorAll('[data-tour-play]').forEach(b => b.addEventListener('click', () => { b.blur(); if (audio.on) audio.ctx?.resume(); tour.start(); }));
+
+// phones: the docked How card grows as a step's text expands (CSS transition), so track its real height
+if (cards[HOW_I] && 'ResizeObserver' in window) new ResizeObserver(() => {
+  const c = cards[HOW_I];
+  if (!phone || !c) return;
+  cardH[HOW_I] = c.offsetHeight; c.style.setProperty('--cardH', cardH[HOW_I] + 'px');
+}).observe(cards[HOW_I]);
 
 // ---------------------------------------------------------------- frame
 const camPos = new THREE.Vector3(), camTgt = new THREE.Vector3();
@@ -360,12 +373,15 @@ function frame(now) {
   const flowVis = i === HOW_I ? ss(0.12, 0.22, f) * (1 - ss(0.93, 1, f)) : 0;
   inHow = flowVis > 0.3;
   document.body.classList.toggle('in-how', inHow);
-  dash.classList.toggle('on', i === HOW_I && f > 0.18 && f < 0.95);
+  const dashOn = i === HOW_I && f > 0.18 && f < 0.95;
+  dash.classList.toggle('on', dashOn);
+  if (dash.inert === dashOn) dash.inert = !dashOn;      // hidden controls stay out of the tab order
+  if (rail.inert !== inHow) rail.inert = inHow;
 
   // ---- sim + spin
   if (tourHold && flowVis > 0.3 && !sim.hold) hold(true);
   if (flowVis > 0) sim.step(dt);
-  else { sim.hold = false; }
+  else if (sim.hold) hold(false);   // clears the button's held state too
   const spinRate = flowVis > 0.01 ? (sim.rpmT / 60) * Math.PI * 2 * 0.001 * (REDUCED ? 0.3 : 1) : (REDUCED ? 0 : 0.9);
   idleAngle += spinRate * dt;
   turbo.spin(spinRate * dt);
@@ -399,6 +415,7 @@ function frame(now) {
   camPos.lerp(pos, k); camTgt.lerp(tgt, k);
   camera.position.copy(camPos);
   camera.lookAt(camTgt);
+  camLight.position.copy(camPos).add(V(0, 6, 0)); camLight.target.position.copy(camTgt);
   // shift the subject away from the text: right on desktop, up on phones
   const W = innerWidth, H = innerHeight;
   if (phone) {

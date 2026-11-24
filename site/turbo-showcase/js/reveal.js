@@ -124,9 +124,11 @@ function countStats(box, on) {
 
 function setState(box, on) {
   if (!box) return;
+  const wasReady = !!box.dataset.rvReady;
   prepContainer(box);
   const prev = active.get(box);
-  if (prev === on) return;
+  // run again once the copy arrives (reveal.js can start before main.js fills the text)
+  if (prev === on && (wasReady || !box.dataset.rvReady)) return;
   active.set(box, on);
   if (on && prev === undefined) {
     requestAnimationFrame(() => requestAnimationFrame(() => {

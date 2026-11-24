@@ -2,7 +2,7 @@
 // cutaway (clipping plane) both render correctly.
 
 import * as THREE from 'three';
-import { castMetalTexture, brushedMetalTexture, radialMachinedTexture, wrinkleCoatTexture, braidedHoseTexture } from './textures.js';
+import { castMetalTexture, brushedMetalTexture, radialMachinedTexture, wrinkleCoatTexture, braidedHoseTexture } from './textures.js?v=4';
 
 export function makeMaterials() {
   const cast = castMetalTexture(101, 1, [3, 3]);
@@ -15,7 +15,7 @@ export function makeMaterials() {
   const std = o => new THREE.MeshStandardMaterial({ side: D, ...o });
   const phys = o => new THREE.MeshPhysicalMaterial({ side: D, ...o });
 
-  return {
+  const M = {
     // compressor housing: sand-cast aluminium, satin
     castAlu: std({ color: 0xb9bec4, metalness: 0.85, roughness: 0.52, bumpMap: cast, bumpScale: 0.02 }),
     // machined faces and bores
@@ -50,4 +50,7 @@ export function makeMaterials() {
     // combustion flash (additive, opacity animated)
     flame: new THREE.MeshBasicMaterial({ color: 0xff7a2a, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }),
   };
+  // metals get most of their look from reflections: a stronger environment keeps the dark housings readable
+  for (const [k, m] of Object.entries(M)) if ('envMapIntensity' in m && !k.startsWith('glass')) m.envMapIntensity = m.metalness > 0.5 ? 1.7 : 1.25;
+  return M;
 }

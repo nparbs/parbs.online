@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { TAU, V3, lathe, sweep, mesh, merge } from '../geo.js';
+import { TAU, V3, lathe, sweep, mesh, merge } from '../geo.js?v=4';
 
 export function buildVband(M, r) {
   const group = new THREE.Group();

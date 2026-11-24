@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { TAU, V3, lathe, skin, rod, merge, mesh } from '../geo.js';
+import { TAU, V3, lathe, skin, rod, merge, mesh } from '../geo.js?v=4';
 
 export function buildTurbineWheel(M) {
   const group = new THREE.Group();

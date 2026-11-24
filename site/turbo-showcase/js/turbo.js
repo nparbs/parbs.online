@@ -1,14 +1,14 @@
 // Assembles the STRATA T64 from its part builders and owns the explode / fade / x-ray state.
 
 import * as THREE from 'three';
-import { buildCompressorWheel } from './parts/compressorWheel.js';
-import { buildTurbineWheel } from './parts/turbineWheel.js';
-import { buildCompressorHousing } from './parts/compressorHousing.js';
-import { buildTurbineHousing } from './parts/turbineHousing.js';
-import { buildChra, buildBackplate } from './parts/chra.js';
-import { buildShaft, buildBearing } from './parts/shaft.js';
-import { buildActuator } from './parts/actuator.js';
-import { buildVband, buildOilLines } from './parts/clamps.js';
+import { buildCompressorWheel } from './parts/compressorWheel.js?v=4';
+import { buildTurbineWheel } from './parts/turbineWheel.js?v=4';
+import { buildCompressorHousing } from './parts/compressorHousing.js?v=4';
+import { buildTurbineHousing } from './parts/turbineHousing.js?v=4';
+import { buildChra, buildBackplate } from './parts/chra.js?v=4';
+import { buildShaft, buildBearing } from './parts/shaft.js?v=4';
+import { buildActuator } from './parts/actuator.js?v=4';
+import { buildVband, buildOilLines } from './parts/clamps.js?v=4';
 
 const v = (x, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
@@ -62,8 +62,24 @@ export function buildTurbo(M) {
       o.material = c;
     });
     const mats = [...clones.values()];
+    // x-ray ghost: every mesh gets a twin that shares its geometry and draws as additive fresnel glass,
+    // so overlapping shells add up cleanly in any draw order instead of sorting into grey smears
+    let ghost = null;
+    if (L.xray) {
+      ghost = makeGhostMaterial();
+      const twins = [];
+      g.traverse(o => { if (o.isMesh) twins.push(o); });
+      for (const o of twins) {
+        const tw = new THREE.Mesh(o.geometry, ghost);
+        tw.castShadow = tw.receiveShadow = false;
+        tw.renderOrder = 2;
+        tw.visible = false;
+        o.add(tw);
+        o.userData.twin = tw;
+      }
+    }
     const anchors = g.userData.anchors || (L.key === 'oilFeed' ? { feed: oil.userData.anchors?.feed } : L.key === 'oilDrain' ? { drain: oil.userData.anchors?.drain } : {});
-    parts[L.key] = { ...L, holder, group: g, mats, anchors, fade: 1, xrayF: 0, applied: '' };
+    parts[L.key] = { ...L, holder, group: g, mats, ghost, anchors, fade: 1, xrayF: 0, applied: '' };
   }
   // the oil-line anchors are given relative to the CHRA origin; the feed/drain groups share it
   const spinners = LAYOUT.filter(L => L.spin).map(L => parts[L.key].group);
@@ -84,20 +100,26 @@ export function buildTurbo(M) {
   function applyMats() {
     for (const p of Object.values(parts)) {
       const xr = p.xray ? p.xrayF : 0;
-      const f = p.fade * (1 - 0.86 * xr);
-      const sig = f.toFixed(3) + '|' + xr.toFixed(3);
+      // solid fades out completely as the glass twin fades in (cross-over is quick so they rarely overlap)
+      const solid = p.fade * (1 - clamp(xr * 1.6));
+      const glass = p.fade * clamp(xr * 1.25);
+      const sig = solid.toFixed(3) + '|' + glass.toFixed(3);
       if (sig === p.applied) continue;      // nothing changed for this part
       p.applied = sig;
       for (const m of p.mats) {
         const b = m.userData.base;
-        const op = b.opacity * f;
+        const op = b.opacity * solid;
         const tr = op < 0.999;
         m.transparent = tr;                 // no needsUpdate: transparency does not change the shader program
         m.opacity = op;
         m.depthWrite = !tr || op > 0.6;
-        m.color.copy(b.color).lerp(XRAY_TINT, xr * 0.6);
+        m.visible = op > 0.004;
       }
-      p.holder.visible = f > 0.004;
+      if (p.ghost) {
+        p.ghost.uniforms.uOpacity.value = glass;
+        p.group.traverse(o => { if (o.userData.twin) o.userData.twin.visible = glass > 0.004; });
+      }
+      p.holder.visible = solid > 0.004 || glass > 0.004;
     }
   }
   function setFade(key, f) { parts[key].fade = f; }
@@ -139,3 +161,28 @@ export function buildTurbo(M) {
 }
 
 const XRAY_TINT = new THREE.Color(0x7fc8ff);
+
+// additive fresnel "glass": faint faces, bright silhouettes and creases
+function makeGhostMaterial() {
+  return new THREE.ShaderMaterial({
+    uniforms: { uOpacity: { value: 0 }, uColor: { value: XRAY_TINT.clone() } },
+    vertexShader: `
+      varying vec3 vN; varying vec3 vV;
+      void main() {
+        vec4 mv = modelViewMatrix * vec4(position, 1.0);
+        vN = normalize(normalMatrix * normal);
+        vV = normalize(-mv.xyz);
+        gl_Position = projectionMatrix * mv;
+      }`,
+    fragmentShader: `
+      uniform float uOpacity; uniform vec3 uColor;
+      varying vec3 vN; varying vec3 vV;
+      void main() {
+        float f = 1.0 - abs(dot(normalize(vN), normalize(vV)));
+        float rim = pow(f, 2.4);
+        float a = (0.025 + 0.4 * rim) * uOpacity;
+        gl_FragColor = vec4(uColor * a, 1.0);
+      }`,
+    transparent: true, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending, toneMapped: false,
+  });
+}
